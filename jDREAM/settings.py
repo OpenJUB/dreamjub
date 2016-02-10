@@ -37,6 +37,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'oauth2_provider',
+    'corsheaders',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -107,3 +109,9 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'auth.backend.LDAPBackend'
 ]
+
+# Add CORS middleware
+MIDDLEWARE_CLASSES += (
+    'corsheaders.middleware.CorsMiddleware',
+)
+CORS_ORIGIN_ALLOW_ALL = True
