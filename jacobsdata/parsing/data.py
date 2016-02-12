@@ -8,7 +8,7 @@ def parse_all(u, password):
     users = user.parse_all_users(u, password)
     if users == None:
         return (None, None)
-    return users
+    
     courses = course.parse_all_courses(u, password, users)
     
     if courses == None:
