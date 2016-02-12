@@ -30,11 +30,11 @@ def get_all_courses(username, password, attributes = ALL_ATTRIBUTES):
     conn.unbind()
     
     # return a list of results
-    return list(map(lambda r:r['attributes'], results))
+    return list(results)
 
-def get_all_students(username, password, attributes = ALL_ATTRIBUTES):
+def get_all_users(username, password, attributes = ALL_ATTRIBUTES):
     """
-    Gets a (raw) list of all students inside LDAP. 
+    Gets a (raw) list of all users inside LDAP. 
     
     Note: This method may take a long time to fetch all students. 
     """
@@ -59,4 +59,4 @@ def get_all_students(username, password, attributes = ALL_ATTRIBUTES):
     conn.unbind()
     
     # return a list of results
-    return list(map(lambda r:r['attributes'], results))
+    return list(results)
