@@ -11,6 +11,8 @@ class BaseComponent(component.UserParsingComponent):
         eid = int(self.getAttribute(user, 'employeeID'))
         ldap_dn = self.getDN(user)
         
+        active = ('OU=active,' in ldap_dn)
+        
         # email, we only use jacobs emails
         email = self.getAttribute(user, 'mail', '')
         if not email_pattern.match(email):
@@ -24,6 +26,8 @@ class BaseComponent(component.UserParsingComponent):
         return {
             'eid': eid, 
             'ldap_dn': ldap_dn, 
+            'active': active, 
+            
             'username': username, 
             'email': email
         }

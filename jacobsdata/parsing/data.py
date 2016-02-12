@@ -15,5 +15,3 @@ def parse_all(u, password):
         return (None, None)
     
     return (users, courses)
-    
-    
