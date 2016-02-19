@@ -5,29 +5,29 @@ email_pattern = re.compile(r'^(.*)@jacobs-university\.de$')
 
 class BaseComponent(component.UserParsingComponent):
     fields = ['employeeID', 'mail', 'sAMAccountName']
-
+    
     def parse(self, user):
         # employeeID and ldap dn (internal identifiers)
         eid = int(self.getAttribute(user, 'employeeID'))
         ldap_dn = self.getDN(user)
-
-        active = ('OU=Active,' in ldap_dn)
-
+        
+        active = ('OU=active,' in ldap_dn)
+        
         # email, we only use jacobs emails
         email = self.getAttribute(user, 'mail', '')
         if not email_pattern.match(email):
             if email != '':
                 print("Warning: 'mail' is not a jacobs email: %r" % (email))
             email = ''
-
+        
         # username
         username = self.getAttribute(user, 'sAMAccountName')
-
+        
         return {
-            'eid': eid,
-            'ldap_dn': ldap_dn,
-            'active': active,
-
-            'username': username,
+            'eid': eid, 
+            'ldap_dn': ldap_dn, 
+            'active': active, 
+            
+            'username': username, 
             'email': email
         }
