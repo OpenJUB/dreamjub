@@ -1,10 +1,6 @@
 from django.contrib.auth.models import User
 
-from ldap3 import Server, Connection
-
-LDAP_SERVER = 'jacobs.jacobs-university.de'
-LDAP_USER_GROUP = 'JACOBS'
-LDAP_BASE_DN = 'ou=users,ou=campusnet,dc=jacobs,dc=jacobs-university,dc=de'
+from jacobsdata import auth
 
 class LDAPBackend(object):
     """
@@ -12,29 +8,16 @@ class LDAPBackend(object):
     """
 
     def authenticate(self, username=None, password=None):
-        # TODO Actually make this authenticate against LDAP
-
         """
         Checks if a given user and password can connect to campusnet.
         """
-
-        login_valid = False
-
-        # empty user => return False
-        if username == "":
-            return None
-
+        
         try:
-            # create a server and a connection
-            server = Server(LDAP_SERVER)
-            conn = Connection(server, "%s\\%s" % (LDAP_USER_GROUP, username), password=password)
-
-            # do the actual bind, then unbind
-            s = conn.bind()
-            conn.unbind()
-
-            login_valid = True
-        except Exception as e:
+            login_valid = auth.authenticate(username, password):
+        except:
+            return None
+        
+        if not login_valid:
             return None
 
         if login_valid:
