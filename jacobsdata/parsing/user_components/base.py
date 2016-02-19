@@ -11,7 +11,7 @@ class BaseComponent(component.UserParsingComponent):
         eid = int(self.getAttribute(user, 'employeeID'))
         ldap_dn = self.getDN(user)
         
-        active = ('OU=active,' in ldap_dn)
+        active = ('OU=Active,' in ldap_dn)
         
         # email, we only use jacobs emails
         email = self.getAttribute(user, 'mail', '')
