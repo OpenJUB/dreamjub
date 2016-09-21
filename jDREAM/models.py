@@ -42,12 +42,13 @@ class Student(models.Model):
         (MERCATOR, 'Mercator College'),
         (COLLEGE_III, 'College III'),
         (COLLEGE_NORDMETALL, 'College Nordmetall')
-    ), null = True)
+    ), null = True, max_length=255)
 
     # Physical contact information
     phone = models.TextField(blank = True, null = True)
     isCampusPhone = models.BooleanField(default = False)
     room = models.TextField(blank = True, null = True)
+    building = models.CharField(null = True, max_length=255)
 
     # Types of people
     isStudent = models.BooleanField()
@@ -60,18 +61,41 @@ class Student(models.Model):
     PHD_INTEGRATED = 'phd-integrated'
     PHD = 'phd'
     WINTER = 'winter'
+    GUEST = 'guest'
     status = models.CharField(choices = (
         (FOUNDATION_YEAR, 'Foundation Year'),
         (UNDERGRADUATE, 'Undergraduate'),
+
         (MASTER, 'Master'),
         (PHD_INTEGRATED, 'integrated PhD'),
-        (PHD, 'PhD')
-    ), null = True)
+
+        (PHD, 'PhD'),
+
+        (WINTER, 'Winter School Student'),
+        (GUEST, 'Guest Student')
+    ), null = True, max_length=255) #: current student status
+
+    #: Degree Status
+    BACHELOR_OF_SCIENCE = 'Bachelor of Science'
+    BACHELOR_OF_ART = 'Bachelor of Art'
+    MASTER_OF_SCIENCE = 'Master of Science'
+    MASTER_OF_ART = 'Master of Art'
+    PHD_DEGREE = 'PhD'
+    degree = models.CharField(choices = (
+        (BACHELOR_OF_SCIENCE, 'Bachelor of Science'),
+        (BACHELOR_OF_ART, 'Bachelor of Art'),
+
+        (MASTER_OF_SCIENCE, 'Master of Science'),
+        (MASTER_OF_ART, 'Master of Art'),
+
+        (PHD_DEGREE, 'PhD')
+    ), null = True, max_length=255)
+
 
 
     # year and major
     year = models.PositiveIntegerField(null = True) #: (Last known) year of Graduation
-    majorShort = models.CharField(null = True)
+    majorShort = models.CharField(null = True, max_length=255)
 
     # TODO: Fill this
     MAJOR_NAMES_MAP = {
@@ -111,11 +135,80 @@ class Student(models.Model):
     @classmethod
     def from_json(cls, data):
         """ Creates a new Student from JSON received from LDAP. """
+        sdict = {
+            "eid": data["eid"],
+            "active": data["active"],
 
-        # TODO: Complete this
-        return Student(
-            eid = data.eid
-        )
+            "email": data["email"],
+            "username": data["username"],
+
+            "phone": data["phone"] or None,
+            "isCampusPhone": data["isCampusPhone"] or False,
+
+            "room": data["room"] or None,
+            "building": data["building"] or None,
+
+            "country": data["country"],
+
+            "firstName": data["firstName"],
+            "lastName": data["lastName"],
+
+            "isStudent": data["isStudent"],
+            "isFaculty": data["isFaculty"],
+            "isStaff": data["isStaff"],
+
+            "majorShort": data["majorShort"],
+        }
+
+        # set the college according to this map
+        collegeMap = {
+            'Krupp': Student.KRUPP,
+            'Mercator': Student.MERCATOR,
+            'C3': Student.COLLEGE_III,
+            'Nordmetall': Student.COLLEGE_NORDMETALL
+        }
+
+        try:
+            sdict["college"] = collegeMap[data["college"]]
+        except KeyError:
+            sdict["college"] = None
+
+        # try to parse the year
+        try:
+            sdict["year"] = int(data["year"])
+        except ValueError:
+            sdict["year"] = None
+
+        # set the status according to this map
+        statusMap = {
+            'foundation-year': Student.FOUNDATION_YEAR,
+            'undergrad': Student.UNDERGRADUATE,
+            'master': Student.MASTER,
+            'phd-integrated': Student.PHD_INTEGRATED,
+            'phd': Student.PHD,
+            'guest': Student.GUEST
+        }
+
+        try:
+            sdict["status"] = statusMap[data["status"]]
+        except KeyError:
+            sdict["status"] = None
+
+        # Set the degree according to this map
+        degreeMap = {
+            'Bachelor of Science': Student.BACHELOR_OF_SCIENCE,
+            'Bachelor of Art': Student.BACHELOR_OF_ART,
+            'Master of Science': Student.MASTER_OF_SCIENCE,
+            'Master of Art': Student.MASTER_OF_ART,
+            'PhD': Student.PHD_DEGREE
+        }
+
+        try:
+            sdict["degree"] = degreeMap[data["degree"]]
+        except KeyError:
+            sdict["degree"] = None
+
+        return Student(**sdict)
 
 class LocalStudent(models.Model):
 
