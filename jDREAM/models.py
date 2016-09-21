@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models.base import ModelBase
+from django.contrib import admin
 
 class Student(models.Model):
     """ Represents a student that is exposed via the API. """
@@ -29,7 +30,7 @@ class Student(models.Model):
         return '%s %s' % (self.firstName, self.lastName)
 
     # Colorfoul Info
-    country = models.TextField() #: Country of origin
+    country = models.TextField(null = True) #: Country of origin
     picture = models.FileField(null = True) #: Picture (if available)
 
     # College Contact Info
@@ -148,7 +149,7 @@ class Student(models.Model):
             "room": data["room"] or None,
             "building": data["building"] or None,
 
-            "country": data["country"],
+            "country": data["country"] or None,
 
             "firstName": data["firstName"],
             "lastName": data["lastName"],
@@ -208,7 +209,36 @@ class Student(models.Model):
         except KeyError:
             sdict["degree"] = None
 
-        return Student(**sdict)
+        return sdict
+
+    @classmethod
+    def refresh_from_ldap(cls, username, password):
+        """ Refreshes all users from ldap and the LocalStudent db"""
+
+        from tqdm import tqdm
+
+        # Load all the users from LDAP
+        print('** READING DATA FROM LDAP **')
+        from jacobsdata.parsing import user
+        users = user.parse_all_users(username, password)
+
+        # mark all of the current ones inactive
+        print('** DISABLING OLD USERS **')
+        cls.objects.all().update(active = False)
+
+        print('** UPDATING USERS **')
+
+        for u in tqdm(users):
+            s = Student.from_json(u)
+            eid = s.pop("eid")
+
+            (stud, sup) = cls.objects.update_or_create(eid=eid, defaults=s)
+            stud.localise()
+
+    def __str__(self):
+        return '%s %s' % (self.username, '(inactive)' if not self.active else '')
+
+
 
 class LocalStudent(models.Model):
 
@@ -231,3 +261,11 @@ class LocalStudent(models.Model):
             # and if it is not None, overwrite
             if value is not None:
                 setattr(student, field.name, value)
+
+# ENABLE SEARCHING
+
+class AdminStudent(admin.ModelAdmin):
+    search_fields = ["eid", "username"]
+
+admin.site.register(Student, AdminStudent)
+admin.site.register(LocalStudent, AdminStudent)
