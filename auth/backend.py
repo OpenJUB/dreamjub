@@ -13,7 +13,7 @@ class LDAPBackend(object):
         """
         
         try:
-            login_valid = auth.authenticate(username, password):
+            login_valid = auth.authenticate(username, password)
         except:
             return None
         
