@@ -1,10 +1,23 @@
+import typing
+
+
 class UserParsingComponent(object):
-    fields = [] # list of raw ldap fields required
-        
-    def parse(self, user):
+    """ Represents a single component of users that can be parsed. """
+
+    fields = []  # list of raw ldap fields required
+
+    def parse(self, user: dict) -> dict:
+        """ Parses a user object using this component and returns
+        an appropriate dict object. """
+
         raise NotImplementedError
-    
-    def getAttribute(self, user, attribute, fallback = None, single = True):
+
+    @staticmethod
+    def get_attribute(user: dict, attribute: str,
+                      fallback: typing.Optional[typing.Any] = None,
+                      single: bool = True) -> typing.Any:
+        """ Gets an attribute from an LDAP object representing a group. """
+
         try:
             attlist = user['attributes'][attribute]
         except KeyError:
@@ -16,18 +29,21 @@ class UserParsingComponent(object):
                 return fallback
         else:
             return attlist
-    def getDN(self, user):
+
+    @staticmethod
+    def get_dn(user: dict) -> str:
+        """ Gets the DN of a user. """
+
         return user['dn']
 
-def all():
-    """
-    Gets a list of all available UserParsingComponent. 
-    """
-    
+
+def available() -> typing.List[UserParsingComponent]:
+    """ Gets a list of all available UserParsingComponents. """
+
     from . import base, college, contact, country, name, status, role
-    
+
     return [
-        base.BaseComponent(), 
+        base.BaseComponent(),
         college.CollegeComponent(),
         contact.ContactComponent(),
         country.CountryComponent(),

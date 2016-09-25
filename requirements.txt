@@ -4,3 +4,4 @@ django-oauth-toolkit>=0.10.0
 django-cors-headers>=1.1.0
 ldap3>=1.4.0
 tqdm>=4.8.4
+flake8>=3.0.4

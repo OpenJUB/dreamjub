@@ -1,10 +1,23 @@
+import typing
+
+
 class CourseParsingComponent(object):
-    fields = [] # list of raw ldap fields required
-        
-    def parse(self, course, parsed_users):
+    """ Represents a single component of courses that can be parsed. """
+
+    fields = []  # list of raw ldap fields required
+
+    def parse(self, course: dict, parsed_users: typing.List[dict]) -> dict:
+        """ Parses a course object using this component and returns
+        an appropriate dict object. """
+
         raise NotImplementedError
-    
-    def getAttribute(self, course, attribute, fallback = None, single = True):
+
+    @staticmethod
+    def get_attribute(course: dict, attribute: str,
+                      fallback: typing.Optional[typing.Any] = None,
+                      single: bool = True) -> typing.Any:
+        """ Gets an attribute from an LDAP object representing a group. """
+
         try:
             attlist = course['attributes'][attribute]
         except KeyError:
@@ -16,18 +29,20 @@ class CourseParsingComponent(object):
                 return fallback
         else:
             return attlist
-    def getDN(self, course):
+
+    def get_dn(self, course: dict) -> str:
+        """ Gets the DN of a course. """
+
         return course['dn']
 
-def all():
-    """
-    Gets a list of all available CourseParsingComponent. 
-    """
-    
+
+def available() -> typing.List[CourseParsingComponent]:
+    """ Gets a list of all available CourseParsingComponents. """
+
     from . import desc, members, active
-    
+
     return [
         desc.DescriptionComponent(),
-        members.MemberComponent(), 
+        members.MemberComponent(),
         active.ActiveComponent()
     ]
