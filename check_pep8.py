@@ -1,4 +1,4 @@
 #!/usr/bin/env python
-import os
+import subprocess
 
-os.system('flake8 --exclude env .')
+subprocess.call(['flake8', '--exclude', 'env', '.'])
