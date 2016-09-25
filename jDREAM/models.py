@@ -1,5 +1,4 @@
 from django.db import models
-from django.db.models.base import ModelBase
 from django.contrib import admin
 
 class Student(models.Model):
@@ -234,6 +233,49 @@ class Student(models.Model):
 
             (stud, sup) = cls.objects.update_or_create(eid=eid, defaults=s)
             stud.localise()
+
+    def __str__(self):
+        return '%s %s' % (self.username, '(inactive)' if not self.active else '')
+
+
+
+    @classmethod
+    def refresh_from_ldap(cls, username, password):
+        """ Refreshes all users from ldap and the LocalStudent db"""
+
+        from tqdm import tqdm
+
+        # Load all the users from LDAP
+        print('** READING DATA FROM LDAP **')
+        from jacobsdata.parsing import user
+        users = user.parse_all_users(username, password)
+
+        # mark all of the current ones inactive
+        print('** DISABLING OLD USERS **')
+        cls.objects.all().update(active = False)
+
+        print('** PREPARING UPDATED ENTRIES **')
+
+        def parse(u):
+            try:
+                # make a a new student object
+                new_student = cls.from_json(u)
+                new_student.localise()
+
+                return (u["eid"], new_student)
+            except Exception as e:
+                print(e)
+
+        updates = list(filter(lambda p:p is not None, map(parse, users)))
+
+        (to_delete, to_create) = zip(*updates)
+
+        print('** DELETING OUTDATED ENTRIES **')
+        for eid in tqdm(to_delete):
+            cls.objects.filter(eid=eid).delete()
+
+        print('** WRITING NEW ENTRIES **')
+        cls.objects.bulk_create(to_create)
 
     def __str__(self):
         return '%s %s' % (self.username, '(inactive)' if not self.active else '')
