@@ -60,8 +60,8 @@ target/
 # SQlite database
 *.sqlite3
 
-# Ignore Django migrations
-**/migrations/
-
 # Exclude IDEA IDE files
 .idea/
+
+# Exclude Bower components
+static/components
