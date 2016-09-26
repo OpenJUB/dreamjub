@@ -116,3 +116,13 @@ MIDDLEWARE_CLASSES += (
     'corsheaders.middleware.CorsMiddleware',
 )
 CORS_ORIGIN_ALLOW_ALL = True
+
+
+# OAuth scope settings
+OAUTH2_PROVIDER = {
+    'SCOPES': {
+        'profile': 'Read your user profile',
+        'courses': 'Read courses you are participating in',
+        'edit': 'Make changes to your profile'
+    }
+}
