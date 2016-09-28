@@ -3,16 +3,44 @@
 
 <dom-module id="login-form">
     <template>
-        <paper-material>
-            <h1>dreamhub login</h1>
-            <paper-input label="Username"></paper-input>
-            <paper-input label="Password" type="password"></paper-input>
-        </paper-material>
+        <paper-dialog opened="[[opened]]" modal>
+          <h2>dreamjub login</h2>
+          <paper-dialog-scrollable>
+            <form method="post" action="[[ login_url ]]">
+                <paper-input label="CampusNet Username" autofocus></paper-input>
+                <paper-input label="Password" type="password"></paper-input>
+
+                <input type="hidden" name="csrftoken" value="[[csrf_token">
+
+                <div class="buttons">
+                    <paper-button dialog-dismiss>Cancel</paper-button>
+                    <paper-button type="submit" id="submit" raised dialog-confirm>Login</paper-button>
+                </div>
+            </form>
+          </paper-dialog-scrollable>
+        </paper-dialog>
     </template>
+
+    <style>
+        #submit {
+            background: blue;
+            color: white;
+        }
+    </style>
 
     <script>
         Polymer({
-            is: 'login-form'
+            is: 'login-form',
+            properties: {
+                login_url: {
+                    type: String,
+                    value: "/login"
+                },
+                opened: {
+                    type: Boolean,
+                    value: false
+                }
+            }
         })
     </script>
 </dom-module>
