@@ -1,0 +1,10 @@
+{% extends 'base/base_full.html' %}
+{% load staticfiles %}
+
+{% block head %}
+    <link rel="import" href="{% static 'elements/login-form.html' %}">
+{% endblock %}
+
+{% block body %}
+    <login-form></login-form>
+{% endblock %}

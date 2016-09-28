@@ -39,7 +39,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'oauth2_provider',
     'corsheaders',
-    'dreamjub'
+    'dreamjub',
+    'login'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -73,6 +74,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'dreamjub.wsgi.application'
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
@@ -105,10 +109,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
-# Custom auth backend
+# Custom login backend
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
-    'auth.backend.LDAPBackend'
+    'login.backend.LDAPBackend'
 ]
 
 # Add CORS middleware

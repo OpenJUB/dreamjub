@@ -1,11 +1,19 @@
-{% extends base.html %}
+{% extends 'base/base.html' %}
+{% load staticfiles %}
 
-{% block head %}
+{% block head_base %}
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <script src="{% static 'components/webcomponentsjs/webcomponents-lite.min.js' %}"></script>
+    {% block head %}
+
+    {% endblock %}
 {% endblock %}
 
 
 {% block body %}
+    <body class="fullbleed layout vertical">
+    {% block body_content %}
 
+    {% endblock %}
+    </body>
 {% endblock %}
