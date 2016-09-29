@@ -130,3 +130,5 @@ OAUTH2_PROVIDER = {
         'edit': 'Make changes to your profile'
     }
 }
+
+LOGIN_URL = "/login"
