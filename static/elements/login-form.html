@@ -8,22 +8,29 @@
 <link rel="import" href="../components/paper-input/paper-input.html">
 <link rel="import" href="../components/paper-button/paper-button.html">
 
+<link rel="import" href="../components/polymer-cookie/polymer-cookie.html">
+
 <dom-module id="login-form">
     <template>
+        <polymer-cookie
+            id="csrfcookie"
+            name="csrftoken">
+        </polymer-cookie>
+
         <paper-dialog opened="[[opened]]" modal>
           <h2>dreamJUB Login</h2>
           <paper-dialog-scrollable>
             <form is="iron-form" method="post" action="[[login_url]]" id="form">
                 <paper-input name="username" label="CampusNet Username"
                              autofocus></paper-input>
-                <paper-input name="password" label="Password"
+                <paper-input id="password" name="password" label="Password"
                              type="password"></paper-input>
 
                 <input type="hidden"
                        name="csrfmiddlewaretoken" value="[[csrf_token]]">
 
                 <div class="buttons">
-                    <paper-button onclick="submit()">Login</paper-button>
+                    <paper-button on-tap="submitForm">Login</paper-button>
                 </div>
             </form>
           </paper-dialog-scrollable>
@@ -38,17 +45,40 @@
                     type: String,
                     value: "/login/"
                 },
+                next: {
+                    type: String,
+                    value: "/"
+                },
                 opened: {
                     type: Boolean,
                     value: false
                 },
                 csrf_token: String
+            },
+            ready: function() {
+                var csrf = document.getElementById('csrfcookie').readCookie();
+                this.csrf_token = csrf;
+            },
+            listeners: {
+                'iron-form-response': 'formResponse'
+            },
+            formResponse: function(event) {
+                var response = event.detail.response;
+
+                console.log(event);
+
+                if(response.status == 'OK') {
+                    window.location.replace(this.next ? this.next : "/");
+                } else {
+                    var passwordField = document.getElementById('password');
+
+                    passwordField.value = "";
+                    passwordField.errorMessage = response.detail;
+                }
+            },
+            submitForm: function(event) {
+                document.getElementById('form').submit();
             }
         });
-
-        var submit = function() {
-            console.log("YAY");
-            document.getElementById('form').submit();
-        }
     </script>
 </dom-module>
