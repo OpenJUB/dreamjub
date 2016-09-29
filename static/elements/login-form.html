@@ -1,32 +1,34 @@
 <link rel="import" href="../components/polymer/polymer.html">
-<link rel="import" href="../components/paper-elements/paper-elements.html">
+
+<link rel="import" href="../components/iron-form/iron-form.html">
+
+<link rel="import" href="../components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../components/paper-dialog-scrollable/paper-dialog
+-scrollable.html">
+<link rel="import" href="../components/paper-input/paper-input.html">
+<link rel="import" href="../components/paper-button/paper-button.html">
 
 <dom-module id="login-form">
     <template>
         <paper-dialog opened="[[opened]]" modal>
-          <h2>dreamjub login</h2>
+          <h2>dreamJUB Login</h2>
           <paper-dialog-scrollable>
-            <form method="post" action="[[ login_url ]]">
-                <paper-input label="CampusNet Username" autofocus></paper-input>
-                <paper-input label="Password" type="password"></paper-input>
+            <form is="iron-form" method="post" action="[[login_url]]" id="form">
+                <paper-input name="username" label="CampusNet Username"
+                             autofocus></paper-input>
+                <paper-input name="password" label="Password"
+                             type="password"></paper-input>
 
-                <input type="hidden" name="csrftoken" value="[[csrf_token">
+                <input type="hidden"
+                       name="csrfmiddlewaretoken" value="[[csrf_token]]">
 
                 <div class="buttons">
-                    <paper-button dialog-dismiss>Cancel</paper-button>
-                    <paper-button type="submit" id="submit" raised dialog-confirm>Login</paper-button>
+                    <paper-button onclick="submit()">Login</paper-button>
                 </div>
             </form>
           </paper-dialog-scrollable>
         </paper-dialog>
     </template>
-
-    <style>
-        #submit {
-            background: blue;
-            color: white;
-        }
-    </style>
 
     <script>
         Polymer({
@@ -34,13 +36,19 @@
             properties: {
                 login_url: {
                     type: String,
-                    value: "/login"
+                    value: "/login/"
                 },
                 opened: {
                     type: Boolean,
                     value: false
-                }
+                },
+                csrf_token: String
             }
-        })
+        });
+
+        var submit = function() {
+            console.log("YAY");
+            document.getElementById('form').submit();
+        }
     </script>
 </dom-module>

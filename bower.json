@@ -23,6 +23,7 @@
   ],
   "dependencies": {
     "polymer": "^1.6.1",
-    "paper-elements": "^1.0.7"
+    "paper-elements": "^1.0.7",
+    "iron-form": "^1.1.4"
   }
 }

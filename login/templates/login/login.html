@@ -3,8 +3,13 @@
 
 {% block head %}
     <link rel="import" href="{% static 'elements/login-form.html' %}">
+    <link rel="import" href="{% static 'components/iron-image/iron-image.html' %}">
 {% endblock %}
 
 {% block body %}
+    <iron-image
+            style="position: absolute; width:100%; height:100%;"
+            sizing="cover"
+            src="{% static 'img/campus-center.jpg' %}"></iron-image>
     <login-form opened></login-form>
 {% endblock %}
