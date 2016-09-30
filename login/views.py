@@ -29,7 +29,8 @@ def login(request, template_name='login/login.html'):
             response_data['login'] = False
             response_data['detail'] = 'Username or password is invalid.'
 
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
+        return HttpResponse(json.dumps(response_data),
+                            content_type="application/json")
 
     if request.method == 'GET':
         return auth_views.login(request, template_name=template_name)

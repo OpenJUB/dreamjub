@@ -31,3 +31,17 @@ Polymer element. Display a login form. Attributes are:
 * `next` - URL to redirect to after successful login
 * `redirect` - Boolean to disable / enable redirect
 * `opened` - If set, opens on page load
+
+
+Dependencies
+------------
+
+The login app relies on the following Polymer components to be installed:
+
+    polymer
+    iron-form
+    paper-dialog
+    paper-dialog-scrollable
+    paper-input
+    paper-button
+    polymer-cookie
