@@ -7,6 +7,13 @@ from django.views.decorators import debug
 
 @debug.sensitive_post_parameters()
 def login(request, template_name='login/login.html'):
+    """
+
+    :param request: HTTP Request
+    :param template_name: Name of the login template to use
+    :return: On POST, returns a JSON object indicating the status of the login.
+             On GET, renders the default Django login view.
+    """
     if request.method == 'POST':
         response_data = {}
 
@@ -16,11 +23,11 @@ def login(request, template_name='login/login.html'):
         if user is not None:
             auth_helpers.login(request, user)
 
-            response_data['status'] = 'OK'
+            response_data['login'] = True
         else:
             # Return an 'invalid login' error message.
-            response_data['status'] = 'ERROR'
-            response_data['detail'] = 'Your username or password is invalid.'
+            response_data['login'] = False
+            response_data['detail'] = 'Username or password is invalid.'
 
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 

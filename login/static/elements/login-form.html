@@ -17,14 +17,15 @@
             name="csrftoken">
         </polymer-cookie>
 
-        <paper-dialog opened="[[opened]]" modal>
-          <h2>dreamJUB Login</h2>
+        <paper-dialog id="dialog" opened="[[opened]]" modal>
+          <h2>Login</h2>
           <paper-dialog-scrollable>
             <form is="iron-form" method="post" action="[[login_url]]" id="form">
                 <paper-input name="username" label="CampusNet Username"
                              autofocus></paper-input>
                 <paper-input id="password" name="password" label="Password"
-                             type="password"></paper-input>
+                             type="password"
+                             on-enter="submitForm"></paper-input>
 
                 <input type="hidden"
                        name="csrfmiddlewaretoken" value="[[csrf_token]]">
@@ -53,30 +54,48 @@
                     type: Boolean,
                     value: false
                 },
-                csrf_token: String
+                redirect: {
+                    type: Boolean,
+                    value: false
+                }
             },
             ready: function() {
                 var csrf = document.getElementById('csrfcookie').readCookie();
                 this.csrf_token = csrf;
             },
             listeners: {
-                'iron-form-response': 'formResponse'
+                'iron-form-response': 'formResponse',
+                'password.keydown': 'keyPress'
+            },
+            keyPress: function(event) {
+                // Submit form if enter key pressed
+                if(event.keyCode === 13)
+                    this.submitForm();
             },
             formResponse: function(event) {
                 var response = event.detail.response;
 
                 console.log(event);
 
-                if(response.status == 'OK') {
-                    window.location.replace(this.next ? this.next : "/");
+                this.fire('login', response);
+
+                if(response.login) {
+                    if(this.redirect) {
+                        window.location.replace(this.next ? this.next : "/");
+                    }
+
+                    var dialog = document.getElementById('dialog').close();
                 } else {
                     var passwordField = document.getElementById('password');
 
                     passwordField.value = "";
                     passwordField.errorMessage = response.detail;
+                    passwordField.invalid = true;
+
+                    passwordField.focus();
                 }
             },
-            submitForm: function(event) {
+            submitForm: function() {
                 document.getElementById('form').submit();
             }
         });
