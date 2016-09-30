@@ -12,8 +12,14 @@ Development Setup
   to [install npm and node](https://nodejs.org/en/download/).
 - create virtual environment: `python3.5 -m virtualenv env`
 - Launch the environment: `source env/bin/activate`
+- Install the requirements: `pip install -r requirements.txt`
 - Migrate the database: `python manage.py migrate`
 - Fetch the polymer components: `bower install`
 - Run the server: `python manage.py runserver`
 - The project should now be deployed at `localhost:8000`
 
+Development
+-----------
+- Upon modifying a database model, generate the migrations: `python manage.py makemigrations` and
+  make sure you commit the migrations.
+- For adding frontend dependencies, prefer installing with bower (i.e. `bower install package_name`)
