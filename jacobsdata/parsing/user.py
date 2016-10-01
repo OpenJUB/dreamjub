@@ -10,13 +10,8 @@ def parse_all_users(username: str, password: str) -> typing.List[dict]:
     # get all the components
     components = component.available()
 
-    # find out the fields we need
-    fields = set()
-    for c in components:
-        fields.update(c.fields)
-
     # get all the students with the given fields
-    users = queries.get_all_users(username, password, attributes=list(fields))
+    users = queries.get_all_users(username, password)
 
     if users is None:
         return None

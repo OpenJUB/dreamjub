@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib import admin
 
+
 class Student(models.Model):
     """ Represents a student that is exposed via the API. """
 
@@ -9,18 +10,17 @@ class Student(models.Model):
     # ================
     # Please also look at LocalStudent model to make these overwritable.
 
-
     # CORE
-    eid = models.IntegerField(unique = True) #: Employee ID
+    eid = models.IntegerField(unique=True)  #: Employee ID
     active = models.BooleanField()
 
     # User identification
-    email = models.EmailField() #: Email
-    username = models.SlugField() #: Campusnet username
+    email = models.EmailField()  #: Email
+    username = models.SlugField()  #: Campusnet username
 
     # Name
-    firstName = models.TextField(blank = True) #: First name
-    lastName = models.TextField(blank = True) #: Last name
+    firstName = models.TextField(blank=True)  #: First name
+    lastName = models.TextField(blank=True)  #: Last name
 
     @property
     def fullName(self):
@@ -29,26 +29,26 @@ class Student(models.Model):
         return '%s %s' % (self.firstName, self.lastName)
 
     # Colorfoul Info
-    country = models.TextField(null = True) #: Country of origin
-    picture = models.FileField(null = True) #: Picture (if available)
+    country = models.TextField(null=True)  #: Country of origin
+    picture = models.FileField(null=True)  #: Picture (if available)
 
     # College Contact Info
     KRUPP = 'Krupp'
     MERCATOR = 'Mercator'
     COLLEGE_III = 'C3'
     COLLEGE_NORDMETALL = 'Nordmetall'
-    college = models.CharField(choices = (
+    college = models.CharField(choices=(
         (KRUPP, 'Krupp College'),
         (MERCATOR, 'Mercator College'),
         (COLLEGE_III, 'College III'),
         (COLLEGE_NORDMETALL, 'College Nordmetall')
-    ), null = True, max_length=255)
+    ), null=True, max_length=255)
 
     # Physical contact information
-    phone = models.TextField(blank = True, null = True)
-    isCampusPhone = models.BooleanField(default = False)
-    room = models.TextField(blank = True, null = True)
-    building = models.CharField(null = True, max_length=255)
+    phone = models.TextField(blank=True, null=True)
+    isCampusPhone = models.BooleanField(default=False)
+    room = models.TextField(blank=True, null=True)
+    building = models.CharField(null=True, max_length=255)
 
     # Types of people
     isStudent = models.BooleanField()
@@ -62,7 +62,7 @@ class Student(models.Model):
     PHD = 'phd'
     WINTER = 'winter'
     GUEST = 'guest'
-    status = models.CharField(choices = (
+    status = models.CharField(choices=(
         (FOUNDATION_YEAR, 'Foundation Year'),
         (UNDERGRADUATE, 'Undergraduate'),
 
@@ -73,7 +73,7 @@ class Student(models.Model):
 
         (WINTER, 'Winter School Student'),
         (GUEST, 'Guest Student')
-    ), null = True, max_length=255) #: current student status
+    ), null=True, max_length=255)  #: current student status
 
     #: Degree Status
     BACHELOR_OF_SCIENCE = 'Bachelor of Science'
@@ -81,7 +81,7 @@ class Student(models.Model):
     MASTER_OF_SCIENCE = 'Master of Science'
     MASTER_OF_ART = 'Master of Art'
     PHD_DEGREE = 'PhD'
-    degree = models.CharField(choices = (
+    degree = models.CharField(choices=(
         (BACHELOR_OF_SCIENCE, 'Bachelor of Science'),
         (BACHELOR_OF_ART, 'Bachelor of Art'),
 
@@ -89,13 +89,12 @@ class Student(models.Model):
         (MASTER_OF_ART, 'Master of Art'),
 
         (PHD_DEGREE, 'PhD')
-    ), null = True, max_length=255)
-
-
+    ), null=True, max_length=255)
 
     # year and major
-    year = models.PositiveIntegerField(null = True) #: (Last known) year of Graduation
-    majorShort = models.CharField(null = True, max_length=255)
+    year = models.PositiveIntegerField(
+        null=True)  #: (Last known) year of Graduation
+    majorShort = models.CharField(null=True, max_length=255)
 
     # TODO: Fill this
     MAJOR_NAMES_MAP = {
@@ -103,7 +102,7 @@ class Student(models.Model):
     }
 
     @property
-    def major(self):
+    def major(self) -> str:
         majorShort = self.majorShort
 
         if majorShort in Student.MAJOR_NAMES_MAP:
@@ -111,7 +110,7 @@ class Student(models.Model):
         else:
             return None
 
-    def localise(self, save = True):
+    def localise(self, save=True):
         """ Localises this student by merging with a local object.
 
         :param save: If set to False, will not auto-save the given object.
@@ -120,7 +119,7 @@ class Student(models.Model):
 
         # try to get the LocalStudent
         try:
-            local = LocalStudent.objects.get(eid = self.eid)
+            local = LocalStudent.objects.get(eid=self.eid)
         except LocalStudent.DoesNotExist:
             return False
 
@@ -211,7 +210,7 @@ class Student(models.Model):
         return sdict
 
     @classmethod
-    def refresh_from_ldap(cls, username, password):
+    def refresh_from_ldap(cls, username: str, password: str) -> bool:
         """ Refreshes all users from ldap and the LocalStudent db"""
 
         from tqdm import tqdm
@@ -221,9 +220,13 @@ class Student(models.Model):
         from jacobsdata.parsing import user
         users = user.parse_all_users(username, password)
 
+        # if we get no users, there was     an error in authentication
+        if users in None:
+            return False
+
         # mark all of the current ones inactive
         print('** DISABLING OLD USERS **')
-        cls.objects.all().update(active = False)
+        cls.objects.all().update(active=False)
 
         print('** UPDATING USERS **')
 
@@ -234,62 +237,21 @@ class Student(models.Model):
             (stud, sup) = cls.objects.update_or_create(eid=eid, defaults=s)
             stud.localise()
 
-    def __str__(self):
-        return '%s %s' % (self.username, '(inactive)' if not self.active else '')
-
-
-
-    @classmethod
-    def refresh_from_ldap(cls, username, password):
-        """ Refreshes all users from ldap and the LocalStudent db"""
-
-        from tqdm import tqdm
-
-        # Load all the users from LDAP
-        print('** READING DATA FROM LDAP **')
-        from jacobsdata.parsing import user
-        users = user.parse_all_users(username, password)
-
-        # mark all of the current ones inactive
-        print('** DISABLING OLD USERS **')
-        cls.objects.all().update(active = False)
-
-        print('** PREPARING UPDATED ENTRIES **')
-
-        def parse(u):
-            try:
-                # make a a new student object
-                new_student = cls.from_json(u)
-                new_student.localise()
-
-                return (u["eid"], new_student)
-            except Exception as e:
-                print(e)
-
-        updates = list(filter(lambda p:p is not None, map(parse, users)))
-
-        (to_delete, to_create) = zip(*updates)
-
-        print('** DELETING OUTDATED ENTRIES **')
-        for eid in tqdm(to_delete):
-            cls.objects.filter(eid=eid).delete()
-
-        print('** WRITING NEW ENTRIES **')
-        cls.objects.bulk_create(to_create)
+        # and we are done
+        return True
 
     def __str__(self):
-        return '%s %s' % (self.username, '(inactive)' if not self.active else '')
-
+        return '%s %s' % (
+            self.username, '(inactive)' if not self.active else '')
 
 
 class LocalStudent(models.Model):
-
     # ================
     # STUDENT / USERS PROPERTIES
     # ================
     # these are the local versions which can be overwritten.
 
-    eid = models.IntegerField(unique = True)
+    eid = models.IntegerField(unique=True)
 
     def merge_with(self, student):
         """ Merges this LocalStudent instance into a student instance. """
@@ -304,10 +266,12 @@ class LocalStudent(models.Model):
             if value is not None:
                 setattr(student, field.name, value)
 
+
 # ENABLE SEARCHING
 
 class AdminStudent(admin.ModelAdmin):
     search_fields = ["eid", "username"]
+
 
 admin.site.register(Student, AdminStudent)
 admin.site.register(LocalStudent, AdminStudent)
