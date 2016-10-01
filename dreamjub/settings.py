@@ -15,7 +15,6 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
@@ -26,7 +25,6 @@ SECRET_KEY = '4@5%xe9_nr7)!(m14ee07eg9b+kh_ukt5hz-hldi&pe^dh9ytk'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -88,7 +86,6 @@ DATABASES = {
     }
 }
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
@@ -102,12 +99,10 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
-
 
 # Custom login backend
 AUTHENTICATION_BACKENDS = [
@@ -120,7 +115,6 @@ MIDDLEWARE_CLASSES += (
     'corsheaders.middleware.CorsMiddleware',
 )
 CORS_ORIGIN_ALLOW_ALL = True
-
 
 # OAuth scope settings
 OAUTH2_PROVIDER = {
