@@ -10,7 +10,7 @@ Development Setup
 - Ensure you have bower installed: `bower --version`. In case bower is not installed,
   install it using `npm install -g bower`. If you don't have npm installed, you need
   to [install npm and node](https://nodejs.org/en/download/).
-- create virtual environment: `python3.5 -m virtualenv env`
+- create virtual environment: `python3.5 -m virtualenv env`. If you don't have virtualenv installed, run `pip3 install virtualenv` first.
 - Launch the environment: `source env/bin/activate`
 - Install the requirements: `pip install -r requirements.txt`
 - Migrate the database: `python manage.py migrate`
