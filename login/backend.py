@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 
 from jacobsdata import auth
 
+
 class LDAPBackend(object):
     """
     Authenticates username and password against Jacobs LDAP domain.
@@ -11,12 +12,12 @@ class LDAPBackend(object):
         """
         Checks if a given user and password can connect to campusnet.
         """
-        
+
         try:
             login_valid = auth.authenticate(username, password)
         except:
             return None
-        
+
         if not login_valid:
             return None
 
