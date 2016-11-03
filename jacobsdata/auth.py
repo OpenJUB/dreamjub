@@ -23,7 +23,7 @@ def connect_and_bind(username: str, password: str) -> typing.Optional[
         ldap3.Connection]:
     """
     Authenticates a user against LDAP and returns a bound connection object
-    or None.p
+    or None.
     """
 
     # we do not allow empty usernames
