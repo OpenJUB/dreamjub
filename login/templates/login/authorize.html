@@ -8,6 +8,19 @@
 <link rel="import" href="{% static 'components/paper-dialog-scrollable/paper-dialog-scrollable.html' %}">
 <link rel="import" href="{% static 'components/paper-button/paper-button.html' %}">
 <link rel="import" href="{% static 'components/iron-image/iron-image.html' %}">
+<script type="text/javascript">
+var allowAccess = function() {
+    document.getElementById('allow-input').value = "Authorize";
+    document.getElementById('form').submit();
+}
+
+var denyAccess = function() {
+    var allowElem = document.getElementById('allow-input');
+    allowElem.parentNode.removeChild(allowElem);
+
+    document.getElementById('form').submit();
+}
+</script>
 {% endblock %}
 
 {% block body %}
@@ -50,20 +63,6 @@
         <li>{{ scope }}</li>
         {% endfor %}
         </ul>
-
-        <script type="text/javascript">
-            var allowAccess = function() {
-                document.getElementById('allow-input').value = "Authorize";
-                document.getElementById('form').submit();
-            }
-
-            var denyAccess = function() {
-                var allowElem = document.getElementById('allow-input');
-                allowElem.parentNode.removeChild(allowElem);
-
-                document.getElementById('form').submit();
-            }
-        </script>
 
         <div class="buttons">
             <paper-button onclick="denyAccess();">Deny</paper-button>
