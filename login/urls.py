@@ -1,9 +1,16 @@
 from django.conf.urls import include, url
-from oauth2_provider import urls as oauth_urls
 
 from . import views
+from oauth2_provider import views as oauth_views
+
 
 urlpatterns = [
     url(r'^$', views.login),
-    url(r'^o/', include(oauth_urls, namespace='oauth2_provider')),
+    url(r'^o/', include([
+        url(r'^authorize/$', views.AuthorizationView.as_view(),
+            name="authorize"),
+        url(r'^token/$', oauth_views.TokenView.as_view(), name="token"),
+        url(r'^revoke_token/$', oauth_views.RevokeTokenView.as_view(),
+            name="revoke-token"),
+        ]))
 ]
