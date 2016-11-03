@@ -12,7 +12,7 @@ class Command(base.BaseCommand):
                             help='Username to use for LDAP. If omitted, ' +
                                  'will ask for username interactively. ')
         parser.add_argument('password', nargs='?', default=None,
-                            help='Passowrd to use for LDAP. If omitted, ' +
+                            help='Password to use for LDAP. If omitted, ' +
                                  'will ask for password interactively. ')
 
     def handle(self, *args, **options):
