@@ -221,7 +221,7 @@ class Student(models.Model):
         users = user.parse_all_users(username, password)
 
         # if we get no users, there was     an error in authentication
-        if users in None:
+        if users is None:
             return False
 
         # mark all of the current ones inactive
