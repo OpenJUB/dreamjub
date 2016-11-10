@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'oauth2_provider',
     'corsheaders',
+    'rest_framework',
     'dreamjub',
     'login'
 )
@@ -46,6 +47,7 @@ MIDDLEWARE_CLASSES = (
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'oauth2_provider.middleware.OAuth2TokenMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -107,15 +109,20 @@ STATIC_URL = '/static/'
 
 # Custom login backend
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'login.backend.LDAPBackend'
+    'oauth2_provider.backends.OAuth2Backend',
+    'login.backend.LDAPBackend',
+    'django.contrib.auth.backends.ModelBackend'
 ]
+
+LOGIN_URL = "/login"
+
 
 # Add CORS middleware
 MIDDLEWARE_CLASSES += (
     'corsheaders.middleware.CorsMiddleware',
 )
 CORS_ORIGIN_ALLOW_ALL = True
+
 
 # OAuth scope settings
 OAUTH2_PROVIDER = {
@@ -126,4 +133,8 @@ OAUTH2_PROVIDER = {
     }
 }
 
-LOGIN_URL = "/login"
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.ext.rest_framework.OAuth2Authentication',
+    )
+}
