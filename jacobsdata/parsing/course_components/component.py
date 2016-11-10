@@ -18,15 +18,24 @@ class CourseParsingComponent(object):
                       single: bool = True) -> typing.Any:
         """ Gets an attribute from an LDAP object representing a group. """
 
+        # read out the course attribute
         try:
             attlist = course['attributes'][attribute]
         except KeyError:
             attlist = []
+
+        # make sure that we actually got a list and not a single value
+        if isinstance(attlist, str):
+            attlist = [attlist]
+
+        # if we want a single value, extract it.
         if single:
             if len(attlist) > 0:
                 return attlist[0]
             else:
                 return fallback
+
+        # else return the normal value
         else:
             return attlist
 
