@@ -30,7 +30,7 @@ class Student(models.Model):
 
     # Colorfoul Info
     country = models.TextField(null=True)  #: Country of origin
-    picture = models.FileField(null=True)  #: Picture (if available)
+    picture = models.ImageField(null=True)  #: Picture (if available)
 
     # College Contact Info
     KRUPP = 'Krupp'
@@ -238,6 +238,49 @@ class Student(models.Model):
             stud.localise()
 
         # and we are done
+        return True
+
+    @classmethod
+    def refresh_images(cls) -> bool:
+        """ Refreshes all users' images from IRC ITs servers"""
+
+        # These dependencies are not required for normal operation
+        # They are imported here to avoid loading unused libraries
+        import requests
+        from tqdm import tqdm
+        from django.core.files import base
+        from django.db import transaction
+
+        base_url = "http://ircitweb.irc-it.jacobs-university.de" \
+                   "/cnpics_128_intranet/{eid}.jpg"
+
+        print('** UPDATING ALL STUDENT IMAGES **')
+        students = Student.objects.all()
+
+        failed = 0
+
+        with transaction.atomic():
+            for student in tqdm(students):
+                result = requests.get(base_url.format(eid=student.eid))
+
+                if not result.status_code == 200:
+                    failed += 1
+                    continue
+
+                student.picture.delete(save=False)
+                student.picture.save(
+                    student.username + ".jpg",
+                    base.ContentFile(result.content),
+                    save=False
+                )
+                student.save()
+
+        if failed == 0:
+            print('** UPDATE COMPLETE **')
+        else:
+            print('** UPDATE COMPLETE: {failed} images failed to load '
+                  '**'.format(failed=failed))
+
         return True
 
     def __str__(self):
