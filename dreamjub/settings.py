@@ -138,3 +138,8 @@ REST_FRAMEWORK = {
         'oauth2_provider.ext.rest_framework.OAuth2Authentication',
     )
 }
+
+
+# Django media settings
+MEDIA_ROOT = "media_files"
+MEDIA_URL = "http://localhost:8080/"  # Serve this separately (Mongoose maybe)

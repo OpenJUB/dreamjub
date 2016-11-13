@@ -65,3 +65,6 @@ target/
 
 # Exclude Bower components
 static/components
+
+# Exclude Django media files
+media_files/
