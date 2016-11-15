@@ -18,9 +18,12 @@ from django.contrib import admin
 
 import login.urls as auth_urls
 import api.urls as api_urls
+import portal.urls as portal_urls
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^login/', include(auth_urls)),
-    url(r'^api/', include(api_urls))
+    url(r'^api/', include(api_urls)),
 ]
+
+urlpatterns += portal_urls.urlpatterns

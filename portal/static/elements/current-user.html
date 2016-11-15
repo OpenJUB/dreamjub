@@ -1,0 +1,41 @@
+<link rel="import" href="../components/polymer/polymer.html">
+
+<link rel="import" href="../components/iron-ajax/iron-ajax.html">
+
+<dom-module id="current-user">
+    <template>
+        <iron-ajax auto
+                   url="/api/v1/users/me"
+                   handle-as="json"
+                   on-response="handleResponse"
+        ></iron-ajax>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'current-user',
+            properties: {
+                "loggedIn": {
+                    type: Boolean,
+                    value: false
+                },
+                "username": {
+                    type: String,
+                    value: ""
+                }
+            },
+            handleResponse: function(event) {
+                var response = event.detail.response;
+
+                this.loggedIn = true;
+                this.username = response.username;
+                this.firstName = response.firstName;
+                this.lastName = response.lastName;
+
+                console.log(this);
+
+                console.log(response);
+            }
+        });
+    </script>
+</dom-module>
