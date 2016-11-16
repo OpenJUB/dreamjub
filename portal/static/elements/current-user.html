@@ -19,10 +19,9 @@
                     type: Boolean,
                     value: false
                 },
-                "username": {
-                    type: String,
-                    value: ""
-                }
+                "username": String,
+                "firstName": String,
+                "lastName": String
             },
             handleResponse: function(event) {
                 var response = event.detail.response;
@@ -32,9 +31,7 @@
                 this.firstName = response.firstName;
                 this.lastName = response.lastName;
 
-                console.log(this);
-
-                console.log(response);
+                this.fire('changed', response);
             }
         });
     </script>
