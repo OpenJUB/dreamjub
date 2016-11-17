@@ -30,7 +30,8 @@ class Student(models.Model):
 
     # Colorfoul Info
     country = models.TextField(null=True)  #: Country of origin
-    picture = models.ImageField(null=True)  #: Picture (if available)
+    picture = models.ImageField(null=True, upload_to='faces/%Y/%m/%d/')  #:
+    # Picture (if available)
 
     # College Contact Info
     KRUPP = 'Krupp'
