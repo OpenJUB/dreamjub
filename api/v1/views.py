@@ -45,6 +45,8 @@ class StudentViewSet(viewsets.ReadOnlyModelViewSet):
             # -accel/#x-accel-redirect
             r = http.HttpResponse()
             r['X-Accel-Redirect'] = "/media/" + user.picture.name
+            r['Content-Type'] = "image/jpg"
+
             return r
 
 
