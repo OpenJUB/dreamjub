@@ -1,11 +1,12 @@
 from . import operators as ops
 """This module holds QBuilder."""
 
+
 class QBuilder(object):
     """Generates a Django Q object from a PreJSPy filter JSON object"""
 
     def translate(self, filter_obj):
-        if not filter:
+        if not filter_obj:
             raise ValueError("Filter was empty")
 
         # Get filter type
@@ -38,12 +39,23 @@ class QBuilder(object):
         try:
             op = ops.BIN_OPS[filter_type]
         except KeyError:
-            raise ValueError("Unknown binary expression: " + filter_type)
+            raise ValueError("Unknown binary operator: " + filter_type)
 
         return op(self.translate(left), self.translate(right))
 
     def _generate_unary(self, filter_obj):
-        raise NotImplementedError
+        try:
+            argument = filter_obj['argument']
+            filter_type = filter_obj['operator']
+        except KeyError as e:
+            raise ValueError("Filter is missing: " + str(e))
+
+        try:
+            op = ops.UNARY_OPS[filter_type]
+        except KeyError:
+            raise ValueError("Unknown unary operator: " + filter_type)
+
+        return op(self.translate(argument))
 
     def _generate_literal(self, literal):
         try:
@@ -53,5 +65,5 @@ class QBuilder(object):
                 return literal['value']
             else:
                 raise NotImplementedError
-        except KeyError:
-            raise ValueError("Invalid literal: " + literal)
+        except KeyError as e:
+            raise ValueError("Invalid literal: " + str(e))

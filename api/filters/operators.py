@@ -4,7 +4,8 @@ from django.db import models
 """This module holds all the logical and non-logical operators and static
 definitions used in QBuilder."""
 
-def not_impl(x, y):
+
+def not_impl(*args):
     raise NotImplementedError
 
 # Binary logic expressions
@@ -25,6 +26,12 @@ def q_lambda(dj_filter="exact"):
 def not_eq(x, y):
     return not_fn(q_lambda()(x, y))
 
+UNARY_OPS = {
+    '-': not_impl,
+    '!': not_fn,
+    '~': not_fn,
+    '+': not_impl
+}
 
 BIN_OPS = {
     '||': or_fn,
