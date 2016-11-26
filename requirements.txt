@@ -14,3 +14,6 @@ pillow>=3.4.2
 
 # For more filters in the REST API
 django-filter>=0.15.3
+
+# For the extended filter language
+pre-js-py==1.1.0

@@ -4,6 +4,7 @@ from django import conf
 from django import http
 
 from dreamjub import models as core_models
+from api.filters import extended as extended_filters
 
 
 class StudentSerializer(serializers.ModelSerializer):
@@ -22,7 +23,7 @@ class StudentViewSet(viewsets.ReadOnlyModelViewSet):
 
     # Filtering
     filter_backends = (filters.DjangoFilterBackend, filters.OrderingFilter,
-                       filters.SearchFilter)
+                       filters.SearchFilter, extended_filters.TLFilter)
     filter_fields = ('college', 'room', 'year', 'majorShort', 'status',
                      'country', 'active')
     search_fields = ('username', 'firstName', 'lastName')
