@@ -4,6 +4,8 @@ DreamJUB
 
 Jacobs Directory Exploration and Mapping Server written in Python 3.5
 
+[![Build Status](https://travis-ci.org/OpenJUB/dreamjub.svg?branch=master)](https://travis-ci.org/OpenJUB/dreamjub)
+
 Development Setup
 -----------------
 - Ensure you have Python 3.5 installed
@@ -17,6 +19,8 @@ Development Setup
 - Fetch the polymer components: `bower install`
 - Run the server: `python manage.py runserver`
 - The project should now be deployed at `localhost:8000`
+- To serve media files in development, run a simple http server in the media_files directory:
+  - `python -m http.server 8080`
 
 Development
 -----------
