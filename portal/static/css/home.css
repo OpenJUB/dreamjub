@@ -1,0 +1,16 @@
+#container {
+    background-color: #f0f;
+    width: 100%;
+    top: 0;
+    position: absolute;
+}
+
+#menu {
+    background: white;
+    color: black;
+}
+
+#menu a {
+    text-decoration: none;
+    color: inherit;
+}

@@ -1,0 +1,52 @@
+<link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="../components/paper-toolbar/paper-toolbar.html">
+
+<link rel="import" href="../elements/current-user.html">
+
+<dom-module id="current-user-widget">
+    <template>
+        <current-user id="user"></current-user>
+
+        <a href="[[ _link_url ]]">
+            <span id="message">[[_message]]</span>
+            <paper-icon-button icon="account-circle"></paper-icon-button>
+        </a>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'current-user-widget',
+            ready: function() {
+                this.updateWidget();
+            },
+            properties: {
+                'loginUrl': {
+                    'type': String,
+                    'value': "/login"
+                },
+                'logoutUrl': {
+                    'type': String,
+                    'value': "/logout"
+                },
+                '_link_url': {
+                    'type': String,
+                    'value': '#'
+                },
+                '_message': String
+            },
+            listeners: {
+                'user.changed': 'updateWidget'
+            },
+            updateWidget: function(e) {
+                if(e !== undefined && e.detail.username !== "") {
+                    var user = e.detail;
+                    this._message = user.firstName + " " + user.lastName;
+                    this._link_url = this.logoutUrl;
+                } else {
+                    this._message = "log in";
+                    this._link_url = this.loginUrl;
+                }
+            }
+        });
+    </script>
+</dom-module>

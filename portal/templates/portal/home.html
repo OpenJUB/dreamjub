@@ -1,0 +1,38 @@
+{% extends 'base/base_full.html' %}
+{% load staticfiles %}
+
+{% block head %}
+    <link rel="import" href="{% static 'components/iron-image/iron-image.html' %}">
+    <link rel="import" href="{% static 'components/paper-toolbar/paper-toolbar.html' %}">
+    <link rel="import" href="{% static 'components/paper-icon-button/paper-icon-button.html' %}">
+    <link rel="import" href="{% static 'components/iron-icons/iron-icons.html' %}">
+    <link rel="import" href="{% static 'components/paper-header-panel/paper-header-panel.html' %}">
+    <link rel="import" href="{% static 'components/paper-elements/paper-elements.html' %}">
+
+    <link rel="import" href="{% static 'elements/current-user-widget.html' %}">
+
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+
+    <style is="custom-style">
+        paper-toolbar {
+            --paper-toolbar-background: white;
+            --paper-toolbar-color: black;
+
+        }
+    </style>
+{% endblock %}
+
+{% block body_content %}
+    <paper-header-panel>
+        <paper-toolbar elevation="2" id="menu">
+            <span class="title">jacobs.university</span>
+            <current-user-widget></current-user-widget>
+        </paper-toolbar>
+
+        <div id="content">
+            <paper-card heading="This is placeholding">
+                <div class="card-content">This is content</div>
+            </paper-card>
+        </div>
+    </paper-header-panel>
+{% endblock %}

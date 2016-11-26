@@ -15,12 +15,17 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
 
 import login.urls as auth_urls
 import api.urls as api_urls
+import portal.urls as portal_urls
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^login/', include(auth_urls)),
-    url(r'^api/', include(api_urls))
+    url(r'^logout/$', auth_views.logout, {'next_page': '/'}, name="logout"),
+    url(r'^api/', include(api_urls)),
 ]
+
+urlpatterns += portal_urls.urlpatterns

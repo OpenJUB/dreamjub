@@ -25,6 +25,7 @@
     "polymer": "^1.6.1",
     "paper-elements": "^1.0.7",
     "iron-form": "^1.1.4",
-    "polymer-cookie": "^1.1.1"
+    "polymer-cookie": "^1.1.1",
+    "iron-icons": "^1.2.0"
   }
 }

@@ -39,7 +39,8 @@ INSTALLED_APPS = (
     'corsheaders',
     'rest_framework',
     'dreamjub',
-    'login'
+    'login',
+    'portal'
 )
 
 MIDDLEWARE_CLASSES = (
