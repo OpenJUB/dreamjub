@@ -1,5 +1,7 @@
-from rest_framework import serializers, views, viewsets, filters
+from rest_framework import serializers, views, viewsets, filters, decorators
 from django import shortcuts
+from django import conf
+from django import http
 
 from dreamjub import models as core_models
 
@@ -7,7 +9,7 @@ from dreamjub import models as core_models
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = core_models.Student
-        fields = '__all__'
+        exclude = ('id', 'eid', 'picture')
 
 
 class StudentViewSet(viewsets.ReadOnlyModelViewSet):
@@ -27,6 +29,25 @@ class StudentViewSet(viewsets.ReadOnlyModelViewSet):
     ordering_fields = ('id', 'eid', 'year', 'majorShort')
 
     lookup_field = 'username'
+
+    @decorators.detail_route()
+    def image(self, request, username=None):
+        user = self.get_object()
+
+        if not user.picture:
+            raise shortcuts.Http404()
+
+        if conf.settings.DEBUG:
+            return shortcuts.redirect(user.picture.url)
+        else:
+            # Serve the file using nginx's X-Accel-Redirect header
+            # https://www.nginx.com/resources/wiki/start/topics/examples/x
+            # -accel/#x-accel-redirect
+            r = http.HttpResponse()
+            r['X-Accel-Redirect'] = "/media/" + user.picture.name
+            r['Content-Type'] = "image/jpg"
+
+            return r
 
 
 class CurrentStudentView(views.APIView):
