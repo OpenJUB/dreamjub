@@ -8,7 +8,6 @@ definitions used in QBuilder."""
 def not_impl(*args):
     raise NotImplementedError
 
-
 # Binary logic expressions
 and_fn = operator.and_
 or_fn = operator.or_
@@ -30,7 +29,6 @@ def q_lambda(dj_filter="exact"):
 
 def not_eq(x, y):
     return not_fn(q_lambda()(x, y))
-
 
 UNARY_OPS = {
     'not': not_fn,
