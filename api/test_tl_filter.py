@@ -196,7 +196,7 @@ class BuilderTestCase(QTestCase):
                     'operator': '=='
                 },
                 "type": "EVAL"
-        })
+            })
 
     def test_binary_missing_left(self):
         with self.assertRaisesMessage(ValueError,

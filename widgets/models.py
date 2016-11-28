@@ -2,7 +2,12 @@ from django.db import models
 from oauth2_provider import models as oauth_models
 from django import conf
 
+
 # Create your models here.
+
+class WidgetType(models.Model):
+    """A type of widget, for example a clock or simple notepad"""
+    owner = models.ForeignKey(oauth_models.Application)
 
 
 class WidgetVersion(models.Model):
@@ -24,11 +29,6 @@ class WidgetVersion(models.Model):
 
     # Governs the availability of this version to end users
     active = models.BooleanField(default=False)
-
-
-class WidgetType(models.Model):
-    """A type of widget, for example a clock or simple notepad"""
-    owner = models.ForeignKey(oauth_models.Application)
 
 
 class Widget(models.Model):
