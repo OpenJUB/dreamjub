@@ -1,3 +1,5 @@
+import functools
+
 from . import operators as ops
 """This module holds QBuilder."""
 
@@ -21,6 +23,9 @@ class QBuilder(object):
 
         elif obj_type == ops.UN_TYPE:
             return self._generate_unary(filter_obj)
+
+        elif obj_type == ops.COMPOUND_TYPE:
+            return self._generate_compound(filter_obj)
 
         elif obj_type in [ops.IDENTITY_TYPE, ops.STRING_TYPE]:
             return self._generate_literal(filter_obj)
@@ -56,6 +61,18 @@ class QBuilder(object):
             raise ValueError("Unknown unary operator: " + filter_type)
 
         return op(self.translate(argument))
+
+    def _generate_compound(self, filter_obj):
+        """Compound expressions are implicitly converted into a series of
+        AND connected clauses."""
+        try:
+            body = filter_obj['body']
+        except KeyError as e:
+            raise ValueError("Compound is missing: " + str(e))
+
+        clauses = [self.translate(part) for part in body]
+
+        return functools.reduce(ops.and_fn, clauses)
 
     def _generate_literal(self, literal):
         try:
