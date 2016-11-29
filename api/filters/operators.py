@@ -54,6 +54,8 @@ BIN_OPS = {
     '==': q_lambda(),
     '===': q_lambda(),
 
+    '!=': not_eq,
+
     'less than': q_lambda('lt'),
     '<': q_lambda('lt'),
 
