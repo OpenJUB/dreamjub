@@ -1,4 +1,5 @@
 from django.core.management import base
+from jacobsdata.parsing import data
 from dreamjub import models
 
 from getpass import getpass
@@ -27,4 +28,10 @@ class Command(base.BaseCommand):
         else:
             pwd = options["password"]
 
-        models.Student.refresh_from_ldap(user, pwd)
+        # Read data from ldap
+        print("**READING DATA FROM LDAP")
+        (users, courses) = data.parse_all(user, pwd)
+
+        # and parse
+        models.Student.refresh_from_ldap(studs=users)
+        models.Course.refresh_from_ldap(courses=courses)

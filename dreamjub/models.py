@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib import admin
+import typing
 
 
 class Student(models.Model):
@@ -211,18 +212,26 @@ class Student(models.Model):
         return sdict
 
     @classmethod
-    def refresh_from_ldap(cls, username: str, password: str) -> bool:
-        """ Refreshes all users from ldap and the LocalStudent db"""
+    def refresh_from_ldap(cls, username: str = None, password: str = None,
+                          studs: typing.List[dict] = None) -> bool:
+        """ Refreshes all users from ldap and the LocalStudent db.
+        either username and password or studs should be given explicitly.
+        """
+
+        if studs is None:
+            if username is None or password is None:
+                raise ValueError(
+                    "Either studs or username and password need to be given. ")
+
+            # Load all the users from LDAP
+            print('** READING DATA FROM LDAP **')
+            from jacobsdata.parsing import user
+            studs = user.parse_all_users(username, password)
 
         from tqdm import tqdm
 
-        # Load all the users from LDAP
-        print('** READING DATA FROM LDAP **')
-        from jacobsdata.parsing import user
-        users = user.parse_all_users(username, password)
-
         # if we get no users, there was     an error in authentication
-        if users is None:
+        if studs is None:
             return False
 
         # mark all of the current ones inactive
@@ -231,7 +240,7 @@ class Student(models.Model):
 
         print('** UPDATING USERS **')
 
-        for u in tqdm(users):
+        for u in tqdm(studs):
             s = Student.from_json(u)
             eid = s.pop("eid")
 
@@ -317,5 +326,92 @@ class AdminStudent(admin.ModelAdmin):
     search_fields = ["eid", "username"]
 
 
+class Course(models.Model):
+    name = models.TextField()
+    active = models.BooleanField()
+    cid = models.TextField(unique=True)
+
+    @classmethod
+    def from_json(cls, json):
+
+        sdict = {
+            "name": json["name"],
+            "active": json["active"],
+            "cid": json["cid"]
+        }
+
+        return sdict
+
+    @classmethod
+    def refresh_from_ldap(cls, username: str = None, password: str = None,
+                          studs: typing.List[dict] = None,
+                          courses: typing.List[dict] = None) -> bool:
+        """ Refreshes all courses from ldap
+
+        If studs or courses is None, needs username and password
+        """
+
+        from tqdm import tqdm
+
+        # Load all the users from LDAP
+        print('** READING DATA FROM LDAP **')
+
+        if courses is None:
+
+            if studs is None:
+                if username is None or password is None:
+                    raise ValueError(
+                        "Needs username and password when studs is None")
+
+                from jacobsdata.parsing import user
+                studs = user.parse_all_users(username, password)
+
+            if username is None or password is None:
+                raise ValueError(
+                    "Needs username and password when courses is None")
+
+            from jacobsdata.parsing import course
+            courses = course.parse_all_courses(username, password, studs)
+
+        # if we get no courses, there was an error in authentication
+        if courses is None:
+            return False
+
+        # mark all of the current ones inactive
+        print('** DISABLING OLD COURSES **')
+
+        cls.objects.all().update(active=False)
+        CourseMemberships.objects.all().delete()
+
+        print('** UPDATING COURSES **')
+
+        for c in tqdm(courses):
+            s = Course.from_json(c)
+            name = s.pop("name")
+
+            (cc, cu) = cls.objects.update_or_create(name=name, defaults=s)
+
+            # create all the memebers
+            for u in c["students"]:
+                su = Student.objects.get(username=u)
+                if su is not None:
+                    CourseMemberships(course=cc, student=su).save()
+
+        print('** UPDATE COMPLETE **')
+
+        # and we are done
+        return True
+
+
+class CourseMemberships(models.Model):
+    class Meta:
+        unique_together = ("course", "student")
+
+    course = models.ForeignKey(Course)
+    student = models.ForeignKey(Student)
+
+
 admin.site.register(Student, AdminStudent)
 admin.site.register(LocalStudent, AdminStudent)
+admin.site.register(Course)
+admin.site.register(CourseMemberships)
