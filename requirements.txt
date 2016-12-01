@@ -17,3 +17,6 @@ django-filter>=0.15.3
 
 # For the extended filter language
 pre-js-py==1.1.0
+
+# For testing pep
+pep8 >= 1.7.0
