@@ -3,7 +3,9 @@ import unittest
 
 import pep8
 
-ignore_patterns = ('env', '.git', '__pycache__', 'dreamjub/migrations')
+ignore_patterns = (
+    'env', '.git', '__pycache__', 'dreamjub/migrations', 'login/migrations',
+    'portal/migrations', 'widgets/migrations')
 
 
 def _ignore(directory: str) -> bool:
