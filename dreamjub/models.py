@@ -334,8 +334,6 @@ class Course(models.Model):
     name = models.TextField()
     active = models.BooleanField()
 
-    members = models.ManyToManyField(Student)
-
     @classmethod
     def from_json(cls, json):
 
@@ -400,7 +398,6 @@ class Course(models.Model):
                 cid=cid, defaults=course_json)
 
             new_course_obj.members.add(*members)
-
         print('** UPDATE COMPLETE **')
 
         # and we are done
@@ -413,6 +410,13 @@ class Course(models.Model):
 
 class AdminCourse(admin.ModelAdmin):
     search_fields = ["name"]
+
+class CourseMemberships(models.Model):
+    class Meta:
+        unique_together = ("course", "student")
+
+    course = models.ForeignKey(Course)
+    student = models.ForeignKey(Student)
 
 
 admin.site.register(Student, AdminStudent)
