@@ -10,10 +10,10 @@ class Command(base.BaseCommand):
     help = 'Reloads all students from LDAP. '
 
     def add_arguments(self, parser):
-        parser.add_argument('-u' '--username', nargs='?', default=None,
+        parser.add_argument('-u', '--username', nargs='?', default=None,
                             help='Username to use for LDAP. If omitted, ' +
                                  'will ask for username interactively. ')
-        parser.add_argument('-p', '--pasword', nargs='?', default=None,
+        parser.add_argument('-p', '--password', nargs='?', default=None,
                             help='Password to use for LDAP. If omitted, ' +
                                  'will ask for password interactively. ')
         parser.add_argument('-s', '--students', nargs='?', default=None,
@@ -23,7 +23,7 @@ class Command(base.BaseCommand):
                             help='JSON file to read courses from. See ' +
                                  '\'manage.py export\'')
 
-    def getCredentials(self, options):
+    def get_credentials(self, options):
         if options["username"] is None:
             self.stdout.write("Username: ")
             user = input()
@@ -35,7 +35,7 @@ class Command(base.BaseCommand):
         else:
             pwd = options["password"]
 
-        return (user, pwd)
+        return user, pwd
 
     def handle(self, *args, **options):
 
@@ -53,15 +53,15 @@ class Command(base.BaseCommand):
         else:
             courses = None
 
-        needsUsers = studs is None
-        needsCourses = courses is None
+        needs_users = studs is None
+        needs_courses = courses is None
 
-        if needsUsers or needsCourses:
-            (u, p) = self.getCredentials(options)
+        if needs_users or needs_courses:
+            (u, p) = self.get_credentials(options)
 
-            if needsCourses:
+            if needs_courses:
                 # we need both
-                if needsUsers:
+                if needs_users:
                     print("**READING STUDENTS AND COURSES FROM LDAP**")
                     (studs, courses) = data.parse_all(u, p)
 
@@ -78,11 +78,9 @@ class Command(base.BaseCommand):
         else:
             (u, p) = None, None
 
-
         # Read data from ldap
         print("**UPDATING DATABASE**")
 
-
         # and parse
-        # models.Student.refresh_from_ldap(studs=studs)
+        models.Student.refresh_from_ldap(studs=studs)
         models.Course.refresh_from_ldap(courses=courses)

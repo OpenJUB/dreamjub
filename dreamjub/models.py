@@ -333,6 +333,7 @@ class Course(models.Model):
     cid = models.TextField(unique=True)
     name = models.TextField()
     active = models.BooleanField()
+    members = models.ManyToManyField(Student)
 
     @classmethod
     def from_json(cls, json):
@@ -346,7 +347,7 @@ class Course(models.Model):
             "cid": json["cid"]
         }
 
-        return (sdict, [s for s in sic if s is not None])
+        return sdict, [s for s in sic if s is not None]
 
     @classmethod
     def refresh_from_ldap(cls, username: str = None, password: str = None,
@@ -389,7 +390,6 @@ class Course(models.Model):
         cls.objects.all().update(active=False)
 
         print('** UPDATING COURSES **')
-
         for c in tqdm(courses):
             (course_json, members) = Course.from_json(c)
             cid = course_json.pop("cid")
@@ -410,13 +410,6 @@ class Course(models.Model):
 
 class AdminCourse(admin.ModelAdmin):
     search_fields = ["name"]
-
-class CourseMemberships(models.Model):
-    class Meta:
-        unique_together = ("course", "student")
-
-    course = models.ForeignKey(Course)
-    student = models.ForeignKey(Student)
 
 
 admin.site.register(Student, AdminStudent)
