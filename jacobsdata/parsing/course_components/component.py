@@ -30,10 +30,13 @@ class CourseParsingComponent(object):
 
         # if we want a single value, extract it.
         if single:
-            if len(attlist) > 0:
-                return attlist[0]
-            else:
-                return fallback
+            try:
+                if len(attlist) > 0:
+                    return attlist[0]
+                else:
+                    return fallback
+            except TypeError:
+                return attlist
 
         # else return the normal value
         else:

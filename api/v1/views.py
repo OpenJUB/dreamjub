@@ -13,6 +13,18 @@ class StudentSerializer(serializers.ModelSerializer):
         exclude = ('id', 'eid', 'picture')
 
 
+class CourseSerializer(serializers.ModelSerializer):
+    members = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field='username'
+    )
+
+    class Meta:
+        model = core_models.Course
+        exclude = ()
+
+
 class StudentViewSet(viewsets.ReadOnlyModelViewSet):
     # Permissions
     required_scopes = []
@@ -49,6 +61,24 @@ class StudentViewSet(viewsets.ReadOnlyModelViewSet):
             r['Content-Type'] = "image/jpg"
 
             return r
+
+
+class CourseView(viewsets.ReadOnlyModelViewSet):
+    # Permissions
+    required_scopes = []
+
+    # Content
+    queryset = core_models.Course.objects.all()
+    serializer_class = CourseSerializer
+
+    # Filtering
+    filter_backends = (filters.DjangoFilterBackend, filters.OrderingFilter,
+                       filters.SearchFilter, extended_filters.TLFilter)
+    filter_fields = ('name', 'active')
+    search_fields = ('name', 'active', 'members')
+    ordering_fields = ('active', 'name')
+
+    lookup_field = 'name'
 
 
 class CurrentStudentView(views.APIView):
