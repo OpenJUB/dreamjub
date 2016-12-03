@@ -17,8 +17,7 @@ def parse_all_courses(username: str, password: str,
         fields.update(c.fields)
 
     # get all the students with the given fields
-    courses = queries.get_all_courses(username, password,
-                                      attributes=list(fields))
+    courses = queries.get_all_courses(username, password)
 
     if courses is None:
         return None

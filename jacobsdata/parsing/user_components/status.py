@@ -6,6 +6,7 @@ status_map = {
     'ug': 'undergrad',
     'm': 'master',
     'fy': 'foundation-year',
+    'mp': 'medprep',
     'phd': 'phd',
     'int_phd': 'phd-integrated',
     'winter_school': 'winter',
