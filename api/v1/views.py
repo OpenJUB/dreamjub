@@ -10,7 +10,7 @@ from api.filters import extended as extended_filters
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = core_models.Student
-        exclude = ('id', 'eid', 'picture')
+        exclude = ('id', 'picture')
 
 
 class CourseSerializer(serializers.ModelSerializer):
