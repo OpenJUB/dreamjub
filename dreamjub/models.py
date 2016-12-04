@@ -330,7 +330,7 @@ class AdminStudent(admin.ModelAdmin):
 
 
 class Course(models.Model):
-    cid = models.TextField(unique=True)
+    cid = models.CharField(unique=True, max_length=32)
     name = models.TextField()
     active = models.BooleanField()
     members = models.ManyToManyField(Student)
