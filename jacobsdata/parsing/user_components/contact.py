@@ -37,17 +37,18 @@ class ContactComponent(component.UserParsingComponent):
         # ignored either way
         if not building_ok and isCampusPhone:
             if phone != '' and room == '':
-                # print("Warning: Missing room information for
-                # telephoneNumber %r" % (phone))
+                print(
+                    "Warning: Missing room information for " +
+                    "telephoneNumber {}".format(phone))
                 pass
             else:
                 print(
                     "Warning: Unknown 'telephoneNumber'/" +
-                    "'physicalDeliveryOfficeName' combination: %r %r" % (
+                    "'physicalDeliveryOfficeName' combination: {} {}".format(
                         phone, room))
 
         # HACK for privacy: hide all non campus phone numbers
-        if isCampusPhone:
+        if not isCampusPhone:
             phone = ''
 
         return {
