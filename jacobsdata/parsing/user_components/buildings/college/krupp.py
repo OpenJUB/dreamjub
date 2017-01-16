@@ -1,10 +1,19 @@
+"""
+Room / Phone mapping for Krupp College
+Blocks A - D + Special numbers
+Range 5000 - 5205, 4804
+Missing ranges: 5008 - 5009
+"""
 name = 'Krupp'
 rooms = [
     # Misc
     {'room': 'Krupp (Private Residence)', 'phone': '5000'},
     {'room': 'Krupp (Emergency)', 'phone': '5001'},
 
+    {'room': 'Krupp, Kitchen (Catering)', 'phone': '5003'},
     {'room': 'Krupp, College Office', 'phone': '5002'},
+
+    {'room': 'Krupp, Conference Room', 'phone': '5004'},
     {'room': 'Krupp, Common Room D2', 'phone': '5005'},
 
     {'room': 'Krupp (Fax CO)', 'phone': '5006'},
@@ -49,6 +58,7 @@ rooms = [
     {'room': 'KA-233', 'phone': '5063'},
     {'room': 'KA-236', 'phone': '5064'},
     {'room': 'KA-237', 'phone': '5065'},
+    {'room': 'KA-240', 'phone': '5066'},
     {'room': 'KA-241', 'phone': '5067'},
     # KA-3
     {'room': 'KA-302', 'phone': '5068'},

@@ -1,9 +1,14 @@
+"""
+Room / Phone mapping for College Mercator
+Blocks A - D + Special numbers
+Range 5300 - 5505
+Missing ranges: 5307 - 5309
+"""
 name = 'Mercator'
 rooms = [
     # Misc
     {'room': 'Mercator (Private Residence)', 'phone': '5300'},
     {'room': 'Mercator (Emergency)', 'phone': '5301'},
-    {'room': 'Mercator (Catering)', 'phone': '5003'},
     {'room': 'Mercator (Fax)', 'phone': '5306'},
 
     {'room': 'Mercator, Kitchen', 'phone': '5303'},
