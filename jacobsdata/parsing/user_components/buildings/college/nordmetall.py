@@ -1,3 +1,9 @@
+"""
+Room / Phone mapping for College Nordmetall
+Blocks A - C + Special Numbers
+Range 6000 - 6295
+Missing ranges: 6011 - 6027
+"""
 name = 'Nordmetall'
 rooms = [
     # Misc
@@ -164,9 +170,23 @@ rooms = [
     {'room': 'NB-260', 'phone': '6167'},
     {'room': 'NB-262', 'phone': '6168'},
     {'room': 'NB-263', 'phone': '6169'},
+    {'room': 'NB-266', 'phone': '6170'},
+    {'room': 'NB-267', 'phone': '6171'},
+    {'room': 'NB-270', 'phone': '6172'},
+    {'room': 'NB-271', 'phone': '6173'},
+    {'room': 'NB-274', 'phone': '6174'},
     {'room': 'NB-275', 'phone': '6175'},
     {'room': 'NB-278', 'phone': '6176'},
+    {'room': 'NB-280', 'phone': '6177'},
+    {'room': 'NB-281', 'phone': '6178'},
+    {'room': 'NB-284', 'phone': '6179'},
+    {'room': 'NB-285', 'phone': '6180'},
+    {'room': 'NB-288', 'phone': '6181'},
+    {'room': 'NB-289', 'phone': '6182'},
     {'room': 'NB-292', 'phone': '6183'},
+    {'room': 'NB-293', 'phone': '6184'},
+    {'room': 'NB-296', 'phone': '6185'},
+    {'room': 'NB-297', 'phone': '6186'},
     # NB-3
     {'room': 'NB-302', 'phone': '6187'},
     {'room': 'NB-303', 'phone': '6188'},
@@ -180,7 +200,10 @@ rooms = [
     {'room': 'NB-319', 'phone': '6196'},
     {'room': 'NB-322', 'phone': '6197'},
     {'room': 'NB-324', 'phone': '6198'},
+    {'room': 'NB-326', 'phone': '6199'},
     {'room': 'NB-327', 'phone': '6200'},
+    {'room': 'NB-330', 'phone': '6201'},
+    {'room': 'NB-331', 'phone': '6202'},
     {'room': 'NB-334', 'phone': '6203'},
     {'room': 'NB-335', 'phone': '6204'},
     {'room': 'NB-338', 'phone': '6205'},
@@ -197,12 +220,15 @@ rooms = [
     {'room': 'NB-367', 'phone': '6216'},
     {'room': 'NB-370', 'phone': '6217'},
     {'room': 'NB-371', 'phone': '6218'},
+    {'room': 'NB-374', 'phone': '6219'},
+    {'room': 'NB-375', 'phone': '6220'},
     {'room': 'NB-378', 'phone': '6221'},
     {'room': 'NB-380', 'phone': '6222'},
     {'room': 'NB-381', 'phone': '6223'},
     {'room': 'NB-384', 'phone': '6224'},
     {'room': 'NB-385', 'phone': '6225'},
     {'room': 'NB-388', 'phone': '6226'},
+    {'room': 'NB-389', 'phone': '6227'},
     {'room': 'NB-392', 'phone': '6228'},
     {'room': 'NB-393', 'phone': '6229'},
     {'room': 'NB-396', 'phone': '6230'},
@@ -211,6 +237,7 @@ rooms = [
     {'room': 'NB-402', 'phone': '6232'},
     {'room': 'NB-403', 'phone': '6233'},
     {'room': 'NB-406', 'phone': '6234'},
+    {'room': 'NB-407', 'phone': '6235'},
     {'room': 'NB-410', 'phone': '6236'},
     {'room': 'NB-411', 'phone': '6237'},
     {'room': 'NB-414', 'phone': '6238'},
@@ -222,11 +249,14 @@ rooms = [
     {'room': 'NB-426', 'phone': '6244'},
     {'room': 'NB-427', 'phone': '6245'},
     {'room': 'NB-430', 'phone': '6246'},
+    {'room': 'NB-431', 'phone': '6247'},
     {'room': 'NB-434', 'phone': '6248'},
     {'room': 'NB-435', 'phone': '6249'},
     {'room': 'NB-438', 'phone': '6250'},
     {'room': 'NB-439', 'phone': '6251'},
     {'room': 'NB-460', 'phone': '6252'},
+    {'room': 'NB-462', 'phone': '6253'},
+    {'room': 'NB-463', 'phone': '6254'},
     {'room': 'NB-466', 'phone': '6255'},
     {'room': 'NB-467', 'phone': '6256'},
     {'room': 'NB-470', 'phone': '6257'},
@@ -252,10 +282,10 @@ rooms = [
     {'room': 'NC-208', 'phone': '6273'},
     {'room': 'NC-210', 'phone': '6274'},
     {'room': 'NC-211', 'phone': '6275'},
-    {'room': 'NC-211', 'phone': '6275'},
     {'room': 'NC-216', 'phone': '6276'},
     {'room': 'NC-218', 'phone': '6277'},
     {'room': 'NC-219', 'phone': '6278'},
+    {'room': 'NC-222', 'phone': '6279'},
     {'room': 'NC-224', 'phone': '6280'},
     # NC-3
     {'room': 'NC-303', 'phone': '6281'},
@@ -265,6 +295,7 @@ rooms = [
     {'room': 'NC-316', 'phone': '6285'},
     {'room': 'NC-318', 'phone': '6286'},
     {'room': 'NC-319', 'phone': '6287'},
+    {'room': 'NC-324', 'phone': '6288'},
     # NC-4
     {'room': 'NC-408', 'phone': '6289'},
     {'room': 'NC-410', 'phone': '6290'},

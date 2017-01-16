@@ -1,8 +1,14 @@
+"""
+Room / Phone mapping for College III
+Blocks A - E + Special Numbers
+Range 5600 - 5865 + 5555
+"""
 name = 'C3'
 rooms = [
     # MISC
     {'room': 'C3 (Private Residence)', 'phone': '5600'},
     {'room': 'C3 (Emergency)', 'phone': '5601'},
+
     {'room': 'C3 (Resident Emergency Sup)', 'phone': '5555'},
     {'room': 'C3 (Catering)', 'phone': '5603'},
     {'room': 'C3 (Fax)', 'phone': '5606'},
@@ -32,8 +38,8 @@ rooms = [
     {'room': 'CA-136', 'phone': '5652'},
     {'room': 'CA-137', 'phone': '5653'},
     # CA-2
-    {'room': 'CA-201', 'phone': '5654'},
-    {'room': 'CA-202', 'phone': '5655'},
+    {'room': 'CA-202', 'phone': '5654'},
+    {'room': 'CA-203', 'phone': '5655'},
     {'room': 'CA-208', 'phone': '5656'},
     {'room': 'CA-209', 'phone': '5657'},
     {'room': 'CA-212', 'phone': '5658'},
@@ -53,8 +59,8 @@ rooms = [
     {'room': 'CA-240', 'phone': '5672'},
     {'room': 'CA-241', 'phone': '5673'},
     # CA-3
-    {'room': 'CA-301', 'phone': '5674'},
-    {'room': 'CA-302', 'phone': '5675'},
+    {'room': 'CA-302', 'phone': '5674'},
+    {'room': 'CA-303', 'phone': '5675'},
     {'room': 'CA-308', 'phone': '5676'},
     {'room': 'CA-309', 'phone': '5677'},
     {'room': 'CA-312', 'phone': '5678'},
@@ -92,12 +98,16 @@ rooms = [
     {'room': 'CB-129', 'phone': '5708'},
     {'room': 'CB-132', 'phone': '5709'},
     {'room': 'CB-133', 'phone': '5710'},
+    {'room': 'CB-136', 'phone': '5711'},
+    {'room': 'CB-137', 'phone': '5712'},
     # CB-2
-    {'room': 'CB-201', 'phone': '5713'},
-    {'room': 'CB-202', 'phone': '5714'},
+    {'room': 'CB-202', 'phone': '5713'},
+    {'room': 'CB-203', 'phone': '5714'},
     {'room': 'CB-208', 'phone': '5715'},
     {'room': 'CB-209', 'phone': '5716'},
+    {'room': 'CB-212', 'phone': '5717'},
     {'room': 'CB-213', 'phone': '5718'},
+    {'room': 'CB-216', 'phone': '5719'},
     {'room': 'CB-217', 'phone': '5720'},
     {'room': 'CB-220', 'phone': '5721'},
     {'room': 'CB-221', 'phone': '5722'},
@@ -106,16 +116,20 @@ rooms = [
     {'room': 'CB-228', 'phone': '5725'},
     {'room': 'CB-229', 'phone': '5726'},
     {'room': 'CB-232', 'phone': '5727'},
+    {'room': 'CB-233', 'phone': '5728'},
     {'room': 'CB-236', 'phone': '5729'},
     {'room': 'CB-237', 'phone': '5730'},
     {'room': 'CB-240', 'phone': '5731'},
     {'room': 'CB-241', 'phone': '5732'},
     # CB-3
-    {'room': 'CB-301', 'phone': '5733'},
-    {'room': 'CB-302', 'phone': '5734'},
+    {'room': 'CB-302', 'phone': '5733'},
+    {'room': 'CB-303', 'phone': '5734'},
     {'room': 'CB-308', 'phone': '5735'},
     {'room': 'CB-309', 'phone': '5736'},
     {'room': 'CB-312', 'phone': '5737'},
+    {'room': 'CB-313', 'phone': '5738'},
+    {'room': 'CB-316', 'phone': '5739'},
+    {'room': 'CB-317', 'phone': '5740'},
     {'room': 'CB-320', 'phone': '5741'},
     {'room': 'CB-321', 'phone': '5742'},
     {'room': 'CB-324', 'phone': '5743'},
@@ -127,17 +141,33 @@ rooms = [
     {'room': 'CB-336', 'phone': '5749'},
     {'room': 'CB-337', 'phone': '5750'},
     {'room': 'CB-340', 'phone': '5751'},
+    {'room': 'CB-341', 'phone': '5752'},
 
     # CC-1
     {'room': 'CC-101', 'phone': '5753'},
     {'room': 'CC-106', 'phone': '5754'},
+    {'room': 'CC-107', 'phone': '5755'},
+    {'room': 'CC-108', 'phone': '5756'},
+    {'room': 'CC-112', 'phone': '5757'},
+    {'room': 'CC-113', 'phone': '5758'},
+    {'room': 'CC-116', 'phone': '5759'},
+    {'room': 'CC-117', 'phone': '5760'},
+    {'room': 'CC-120', 'phone': '5761'},
     {'room': 'CC-121', 'phone': '5762'},
+    {'room': 'CC-124', 'phone': '5763'},
+    {'room': 'CC-125', 'phone': '5764'},
+    {'room': 'CC-128', 'phone': '5765'},
+    {'room': 'CC-129', 'phone': '5766'},
+    {'room': 'CC-132', 'phone': '5767'},
+    {'room': 'CC-133', 'phone': '5768'},
     {'room': 'CC-136', 'phone': '5769'},
+    {'room': 'CC-137', 'phone': '5770'},
     # CC-2
     {'room': 'CC-201', 'phone': '5771'},
     {'room': 'CC-208', 'phone': '5772'},
     {'room': 'CC-209', 'phone': '5773'},
     {'room': 'CC-212', 'phone': '5774'},
+    {'room': 'CC-213', 'phone': '5775'},
     {'room': 'CC-216', 'phone': '5776'},
     {'room': 'CC-217', 'phone': '5777'},
     {'room': 'CC-220', 'phone': '5778'},
@@ -194,6 +224,7 @@ rooms = [
     {'room': 'CD-137', 'phone': '5826'},
     # CD-2
     {'room': 'CD-201', 'phone': '5827'},
+    {'room': 'CD-206', 'phone': '5828'},
     {'room': 'CD-208', 'phone': '5829'},
     {'room': 'CD-209', 'phone': '5830'},
     {'room': 'CD-212', 'phone': '5831'},

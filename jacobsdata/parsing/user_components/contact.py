@@ -40,7 +40,6 @@ class ContactComponent(component.UserParsingComponent):
                 print(
                     "Warning: Missing room information for " +
                     "telephoneNumber {}".format(phone))
-                pass
             else:
                 print(
                     "Warning: Unknown 'telephoneNumber'/" +
