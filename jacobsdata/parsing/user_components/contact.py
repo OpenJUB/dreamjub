@@ -12,41 +12,47 @@ class ContactComponent(component.UserParsingComponent):
         phone = self.get_attribute(user, 'telephoneNumber', '')
         room = self.get_attribute(user, 'room', '')
 
-        # try and get the building from either the room or phone
+        # use an empty building by default
         building = ''
-        building_ok = True
 
-        if phone:
-            building_ok = False
-            r = rooms.get_room_by_phone(phone)
-            if r is not None:
-                building = r['building']
-                building_ok = True
+        # Booleans indicating if we have room and phone number
+        hasPhone = phone != ''
+        hasRoom = room != ''
 
-        if room and building == '':
-            building_ok = False
-            r = rooms.get_room_by_room(room)
-            if r is not None:
-                building = r['building']
-                building_ok = True
-
-        # check if we have an on-campus phone number
+        # is the know phone number on campus?
         isCampusPhone = (len(phone) == 4)
 
-        # warn only if we have a campus phone since non-campus phones are
-        # ignored either way
-        if not building_ok and isCampusPhone:
-            if phone != '' and room == '':
-                print(
-                    "Warning: Missing room information for " +
-                    "telephoneNumber {}".format(phone))
-            else:
-                print(
-                    "Warning: Unknown 'telephoneNumber'/" +
-                    "'physicalDeliveryOfficeName' combination: {} {}".format(
-                        phone, room))
+        # Step 1: Complete room, phone, building information as best as possible
 
-        # HACK for privacy: hide all non campus phone numbers
+        # if we have the phone number, always look up the room inside the
+        # database, because the data inside ldap is dirty
+        if hasPhone:
+            room_obj = rooms.get_room_by_phone(phone)
+            if room_obj is not None:
+                room = room_obj["room"]
+                building = room_obj["building"]
+                isCampusPhone = True
+            elif hasRoom:
+                print("Warning: Missing phone information for " +
+                      "physicalDeliveryOfficeName {}".format(room))
+            elif isCampusPhone:
+                print("Warning: Missing room information for " +
+                      "telephoneNumber {}".format(phone))
+        # in the case where we only have a room, but not a phone number,
+        # we can try to look this up as well.
+        # Probably this will not work, since the information
+        # is pretty dirty inside LDAP
+        elif hasRoom and not hasPhone:
+            room_obj = rooms.get_room_by_room(room)
+            if room_obj is not None:
+                phone = room_obj["phone"]
+                building = room_obj["building"]
+                isCampusPhone = True
+            else:
+                print("Warning: Missing phone information for " +
+                      "physicalDeliveryOfficeName {}".format(room))
+
+        # for privacy, we hide phone numbers that are not on campus
         if not isCampusPhone:
             phone = ''
 
