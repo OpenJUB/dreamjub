@@ -55,4 +55,7 @@ def get_all_users(username: str, password: str) -> \
     Note: This method may take a long time to fetch all students.
     """
 
-    return query(username, password, 'ou=users', '(objectclass=person)')
+    return query(username, password, 'ou=users', '(&(' +
+                 'memberOf=CN=GS-JACOBS-Students-FLAT,OU=Groups,' +
+                 'OU=CampusNet,DC=jacobs,DC=jacobs-university,DC=de)' +
+                 '(objectclass=person))')
