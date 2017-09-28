@@ -70,8 +70,8 @@ BIN_OPS = {
     '>=': q_lambda('gte'),
     '=>': q_lambda('gte'),
 
-    'contains': q_lambda('contains'),
-    '::': q_lambda('contains'),
+    'contains': q_lambda('icontains'),
+    '::': q_lambda('icontains'),
 
     'matches': q_lambda('regex'),
     'unicorn': q_lambda('regex'),
