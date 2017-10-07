@@ -129,7 +129,7 @@ class Student(models.Model):
             return False
 
         # do the update
-        local.update(self)
+        local.merge_with(self)
         if save:
             self.save()
 
