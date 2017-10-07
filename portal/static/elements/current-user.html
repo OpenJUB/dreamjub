@@ -19,17 +19,53 @@
                     type: Boolean,
                     value: false
                 },
+
+                "email": String,
                 "username": String,
                 "firstName": String,
-                "lastName": String
+                "lastName": String,
+                "country": String,
+                "college": String,
+                "phone": String,
+                "isCampusPhone": Boolean,
+                "room": String,
+                "building": String,
+                "isStudent": Boolean,
+                "isFaculty": Boolean,
+                "isStaff": Boolean,
+                "status": String,
+                "degree": String,
+                "year": Number,
+                "majorShort": String
             },
-            handleResponse: function(event) {
+            handleResponse: function (event) {
                 var response = event.detail.response;
 
+                var fields = [
+                    "email",
+                    "username",
+                    "firstName",
+                    "lastName",
+                    "country",
+                    "college",
+                    "phone",
+                    "isCampusPhone",
+                    "room",
+                    "building",
+                    "isStudent",
+                    "isFaculty",
+                    "isStaff",
+                    "status",
+                    "degree",
+                    "year",
+                    "majorShort"
+                ];
+
                 this.loggedIn = true;
-                this.username = response.username;
-                this.firstName = response.firstName;
-                this.lastName = response.lastName;
+
+                for(var i=0;i<fields.length;i++){
+                    this[fields[i]] = response[fields[i]]
+                }
 
                 this.fire('changed', response);
             }
