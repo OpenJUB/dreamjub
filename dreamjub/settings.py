@@ -48,7 +48,10 @@ MIDDLEWARE_CLASSES = (
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+
     'oauth2_provider.middleware.OAuth2TokenMiddleware',
+    'sesame.middleware.AuthenticationMiddleware',
+
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -111,19 +114,18 @@ STATIC_URL = '/static/'
 # Custom login backend
 AUTHENTICATION_BACKENDS = [
     'oauth2_provider.backends.OAuth2Backend',
-    'login.backend.LDAPBackend',
+    # 'login.backend.LDAPBackend',
+    'sesame.backends.ModelBackend',
     'django.contrib.auth.backends.ModelBackend'
 ]
 
 LOGIN_URL = "/login"
-
 
 # Add CORS middleware
 MIDDLEWARE_CLASSES += (
     'corsheaders.middleware.CorsMiddleware',
 )
 CORS_ORIGIN_ALLOW_ALL = True
-
 
 # OAuth scope settings
 OAUTH2_PROVIDER = {
@@ -147,7 +149,16 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 100
 }
 
-
 # Django media settings
 MEDIA_ROOT = "media_files"
 MEDIA_URL = "http://localhost:8080/"  # Serve this separately (Mongoose maybe)
+
+# For the magic link login
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = "smtp.udag.de"
+EMAIL_HOST_USER = "noreply@jacobs.university"
+EMAIL_HOST_PASSWORD = ""
+EMAIL_USE_TLS = True
+
+SESAME_TOKEN_NAME = "thanks_irc_it"
+SESAME_MAX_AGE = 1800

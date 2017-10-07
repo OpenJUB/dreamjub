@@ -1,0 +1,214 @@
+<link rel="import" href="../components/polymer/polymer.html">
+
+<link rel="import" href="../components/iron-form/iron-form.html">
+
+<link rel="import" href="../components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../components/paper-dialog-scrollable/paper-dialog
+-scrollable.html">
+<link rel="import" href="../components/paper-input/paper-input.html">
+<link rel="import" href="../components/gold-email-input/gold-email-input.html">
+<link rel="import" href="../components/paper-button/paper-button.html">
+
+<link rel="import" href="../components/polymer-cookie/polymer-cookie.html">
+
+<dom-module id="dreamjub-login-form">
+    <template>
+
+        <!-- storing the csrf token -->
+        <polymer-cookie
+                id="csrfcookie"
+                name="csrftoken">
+        </polymer-cookie>
+
+        <!-- Confirmed login dialog -->
+        <paper-dialog id="result" modal>
+            <h2>Done</h2>
+            <paper-dialog-scrollable>
+                <p>
+                    If you exist in the database, you should have gotten an email. <br />
+                    <small>
+                        If you used the advanced login, you should be redirected.
+                    </small>
+                </p>
+            </paper-dialog-scrollable>
+        </paper-dialog>
+
+        <!-- the magic login dialog -->
+        <paper-dialog id="email-dialog" opened="opened" modal>
+            <h2>Login</h2>
+            <paper-dialog-scrollable>
+                <form is="iron-form" method="post" action="[[login_url]]" id="email-form">
+
+                    <p>Enter your email, then click 'Go' to login. </p>
+
+                    <gold-email-input id="email" name="email" label="Jacobs Email"
+                                      autofocus></gold-email-input>
+
+                    <input type="hidden"
+                           name="csrfmiddlewaretoken" value="[[csrf_token]]">
+
+                    <input type="hidden"
+                           name="next" value="[[next]]">
+
+                    <div class="buttons">
+                        <paper-button on-tap="activateAdvancedForm">Advanced</paper-button>
+                        <paper-button on-tap="submitEmailForm">Go</paper-button>
+                    </div>
+                </form>
+            </paper-dialog-scrollable>
+        </paper-dialog>
+
+        <!-- The normal login dialog -->
+        <paper-dialog id="advanced-dialog" modal>
+            <h2>Advanced Login</h2>
+            <paper-dialog-scrollable>
+                <form is="iron-form" method="post" action="[[login_url]]" id="advanced-form">
+
+                    <p>
+                        This form only works for you when we told you about it. <br />
+                        <b>Do not enter CampusNet credentials here, they will not work. </b>
+                    </p>
+
+
+                    <paper-input id="username" name="username" label="Username"
+                                 autofocus></paper-input>
+                    <paper-input id="password" name="password" label="Password"
+                                 type="password"></paper-input>
+
+                    <input type="hidden"
+                           name="csrfmiddlewaretoken" value="[[csrf_token]]">
+
+                    <input type="hidden"
+                           name="next" value="[[next]]">
+
+                    <div class="buttons">
+                        <paper-button on-tap="activateEmailForm">Normal User Login</paper-button>
+                        <paper-button on-tap="submitAdvancedForm">Go</paper-button>
+                    </div>
+                </form>
+            </paper-dialog-scrollable>
+        </paper-dialog>
+
+    </template>
+
+    <script>
+        Polymer({
+            is: 'dreamjub-login-form',
+            // all the properties
+            properties: {
+                login_url: {
+                    type: String,
+                    value: "/login/"
+                },
+                next: {
+                    type: String,
+                    value: "/"
+                },
+                opened: {
+                    type: Boolean,
+                    value: false
+                },
+                redirect: {
+                    type: Boolean,
+                    value: false
+                }
+            },
+
+            // what do we do when we get a response
+            listeners: {
+                'email-form.iron-form-response': 'emailFormResponse',
+                'email.keydown': 'emailPressEnterHandler',
+
+                'advanced-form.iron-form-response': 'advancedFormResponse',
+                'username.keydown': 'advancedPressEnterHandler',
+                'password.keydown': 'advancedPressEnterHandler'
+            },
+
+            // initial setup
+            ready: function () {
+                var csrf = document.getElementById('csrfcookie').readCookie();
+                this.csrf_token = csrf;
+            },
+
+            // ==========
+            // EMAIL FORM
+            // ==========
+
+            emailPressEnterHandler: function (event) {
+                // submit the form when pressing enter
+                if (event.keyCode === 13) {
+                    this.submitEmailForm();
+                }
+            },
+
+            submitEmailForm: function () {
+                document.getElementById('email-form').submit();
+            },
+
+            emailFormResponse: function (event) {
+                var response = event.detail.response;
+
+                if (response.login) {
+                    document.getElementById('email-dialog').close();
+                    document.getElementById('result').open();
+                } else {
+                    var emailField = document.getElementById('email');
+
+                    emailField.value = "";
+                    emailField.errorMessage = response.detail;
+                    emailField.invalid = true;
+
+                    emailField.focus();
+                }
+            },
+
+            // ==========
+            // ADVANCED FORM
+            // ==========
+
+            advancedPressEnterHandler: function (event) {
+                // submit the form when pressing enter
+                if (event.keyCode === 13) {
+                    this.submitAdvancedForm();
+                }
+            },
+
+            submitAdvancedForm: function (){
+                document.getElementById('advanced-form').submit();
+            },
+
+            advancedFormResponse: function(response){
+                if(response.detail.response.login) {
+
+                    document.getElementById('advanced-dialog').close();
+                    document.getElementById('result').open();
+
+                    if(this.redirect) {
+                        window.location.replace(this.next ? this.next : "/");
+                    }
+                } else {
+                    var passwordField = document.getElementById('password');
+                    passwordField.value = "";
+                    passwordField.errorMessage = response.detail.response.message;
+                    passwordField.invalid = true;
+                    passwordField.focus();
+                }
+            },
+
+            // ==========
+            // SWAPPING FORM
+            // ==========
+            activateAdvancedForm: function () {
+                document.getElementById('email-dialog').close();
+                document.getElementById('username').value = document.getElementById('email').value;
+                document.getElementById('password').value = '';
+                document.getElementById('advanced-dialog').open();
+            },
+            activateEmailForm: function () {
+                document.getElementById('advanced-dialog').close();
+                document.getElementById('email').value = document.getElementById('username').value;
+                document.getElementById('email-dialog').open();
+            }
+        });
+    </script>
+</dom-module>
