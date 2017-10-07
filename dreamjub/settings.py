@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'oauth2_provider',
     'corsheaders',
     'rest_framework',
+    'django_filters',
     'dreamjub',
     'login',
     'portal'
