@@ -1,9 +1,9 @@
 import json
-from django.http import HttpResponse
-from django.contrib.auth import views as auth_views
+
+from django.http import HttpResponse, HttpResponseForbidden
 from django.contrib import auth as auth_helpers
 from django.views.decorators import debug
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core import mail
 from django import conf
 
@@ -14,6 +14,11 @@ from oauth2_provider import views as oauth_views
 from sesame import utils as token_utils
 
 from dreamjub.models import Student
+
+try:
+    from urllib import urlencode
+except ImportError:
+    from urllib.parse import urlencode
 
 
 @debug.sensitive_post_parameters()
@@ -102,11 +107,12 @@ def try_email_login(request, email):
 
     # if the user is not None, write them an email
     if user is not None:
+        params = token_utils.get_parameters(user)
+        params['next'] = next
 
         link = 'https://' + request.META['HTTP_HOST']
-        link += next
-        link += '&' if '?' in next else '?'
-        link += token_utils.get_query_string(user)[1:]
+        link += '/login/next?'
+        link += urlencode(params)
 
         # we need some content for the email
         email_content = """Hey {0},
@@ -148,6 +154,27 @@ def try_user_login(request, username, password):
     else:
         return {'login': False,
                 'message': 'Invalid username / password combination. '}
+
+
+@require_http_methods(['GET'])
+def next(request):
+    # try and get the next parameter
+    try:
+        next = request.GET['next']
+    except KeyError:
+        next = '/'
+
+    # if next is not 'local', throw an error
+    if not next.startswith('/'):
+        return HttpResponseForbidden()
+
+    # if we are authenticated, simply redirect to it
+    if request.user.is_authenticated:
+        return redirect(next)
+
+    # if we are not logged in, log in first
+    else:
+        return redirect('/login?' + urlencode({'next': next}))
 
 
 class AuthorizationView(oauth_views.AuthorizationView):
