@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib import admin
+from django.contrib.auth.models import User
 import typing
 
 
@@ -128,7 +129,7 @@ class Student(models.Model):
             return False
 
         # do the update
-        local.update(self)
+        local.merge_with(self)
         if save:
             self.save()
 
@@ -299,6 +300,20 @@ class Student(models.Model):
     def __str__(self):
         return '%s %s' % (
             self.username, '(inactive)' if not self.active else '')
+
+    def get_or_create_user(self):
+        """ Creates a new user or creates a new user using this Student as a
+        basis """
+        try:
+            user = User.objects.get(username=self.username)
+        except User.DoesNotExist:
+            user = User(username=self.username, first_name=self.firstName,
+                        last_name=self.lastName, email=self.email,
+                        password='get from settings.py')
+            user.set_unusable_password()
+            user.save()
+
+        return user
 
 
 class LocalStudent(models.Model):

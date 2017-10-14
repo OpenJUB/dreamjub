@@ -1,4 +1,5 @@
 from rest_framework import serializers, views, viewsets, filters, decorators
+from django_filters.rest_framework import DjangoFilterBackend
 from django import shortcuts
 from django import conf
 from django import http
@@ -34,7 +35,7 @@ class StudentViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = StudentSerializer
 
     # Filtering
-    filter_backends = (filters.DjangoFilterBackend, filters.OrderingFilter,
+    filter_backends = (DjangoFilterBackend, filters.OrderingFilter,
                        filters.SearchFilter, extended_filters.TLFilter)
     filter_fields = ('college', 'room', 'year', 'majorShort', 'status',
                      'country', 'active')
@@ -72,7 +73,7 @@ class CourseView(viewsets.ReadOnlyModelViewSet):
     serializer_class = CourseSerializer
 
     # Filtering
-    filter_backends = (filters.DjangoFilterBackend, filters.OrderingFilter,
+    filter_backends = (DjangoFilterBackend, filters.OrderingFilter,
                        filters.SearchFilter, extended_filters.TLFilter)
     filter_fields = ('name', 'active')
     search_fields = ('name', 'active', 'members')

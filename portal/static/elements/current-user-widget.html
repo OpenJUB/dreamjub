@@ -1,50 +1,124 @@
 <link rel="import" href="../components/polymer/polymer.html">
-<link rel="import" href="../components/paper-toolbar/paper-toolbar.html">
-
 <link rel="import" href="../elements/current-user.html">
+
+<link rel="import" href="../components/iron-icons/iron-icons.html">
+
+<link rel="import" href="../components/paper-dialog/paper-dialog.html">
+<link rel="import"
+      href="../components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+<link rel="import"
+      href="../components/paper-icon-button/paper-icon-button.html">
+
 
 <dom-module id="current-user-widget">
     <template>
         <current-user id="user"></current-user>
 
-        <a href="[[ _link_url ]]">
-            <span id="message">[[_message]]</span>
-            <paper-icon-button icon="account-circle"></paper-icon-button>
-        </a>
+        <paper-dialog id='authenticated'>
+            <h2>Your User Information</h2>
+            <paper-dialog-scrollable>
+                <b>Name:</b> [[_firstName]] [[_lastName]] <hr />
+
+                <b>Username:</b> [[_username]] <br />
+                <b>Email:</b> [[_email]] <hr />
+
+                <b>Major:</b> [[_majorShort]] <br />
+                <b>Year:</b> [[_year]] <br />
+                <b>Status:</b> [[_status]] <br />
+                <b>Country:</b> [[_username]] <hr />
+
+                <b>College:</b> [[_college]] <br />
+                <b>Room:</b> [[_room]] <br />
+                <b>Phone:</b> [[_phone]] <br />
+            </paper-dialog-scrollable>
+            <div class="buttons">
+                <a href="/logout">
+                    Logout
+                    <paper-icon-button
+                            icon="account-circle"></paper-icon-button>
+                </a>
+            </div>
+
+        </paper-dialog>
+
+        <paper-dialog id='anonymous'>
+            <h2>User Information</h2>
+            <paper-dialog-scrollable>
+                <p>
+                    You are not currently logged in.
+                </p>
+            </paper-dialog-scrollable>
+            <div class="buttons">
+                <a href="/login">
+                    Login
+                    <paper-icon-button
+                            icon="account-circle"></paper-icon-button>
+                </a>
+            </div>
+        </paper-dialog>
     </template>
 
     <script>
         Polymer({
             is: 'current-user-widget',
-            ready: function() {
+            ready: function () {
                 this.updateWidget();
             },
             properties: {
-                'loginUrl': {
-                    'type': String,
-                    'value': "/login"
-                },
-                'logoutUrl': {
-                    'type': String,
-                    'value': "/logout"
-                },
-                '_link_url': {
-                    'type': String,
-                    'value': '#'
-                },
-                '_message': String
+                "_email": String,
+                "_username": String,
+                "_firstName": String,
+                "_lastName": String,
+                "_country": String,
+                "_college": String,
+                "_phone": String,
+                "_isCampusPhone": Boolean,
+                "_room": String,
+                "_building": String,
+                "_isStudent": Boolean,
+                "_isFaculty": Boolean,
+                "_isStaff": Boolean,
+                "_status": String,
+                "_degree": String,
+                "_year": Number,
+                "_majorShort": String
+
             },
             listeners: {
                 'user.changed': 'updateWidget'
             },
-            updateWidget: function(e) {
-                if(e !== undefined && e.detail.username !== "") {
+            updateWidget: function (e) {
+                if (e !== undefined && e.detail.username !== "") {
+                    document.getElementById('anonymous').close();
+                    document.getElementById('authenticated').open();
+
                     var user = e.detail;
-                    this._message = user.firstName + " " + user.lastName;
-                    this._link_url = this.logoutUrl;
+                    var fields = [
+                        "email",
+                        "username",
+                        "firstName",
+                        "lastName",
+                        "country",
+                        "college",
+                        "phone",
+                        "isCampusPhone",
+                        "room",
+                        "building",
+                        "isStudent",
+                        "isFaculty",
+                        "isStaff",
+                        "status",
+                        "degree",
+                        "year",
+                        "majorShort"
+                    ];
+
+                    for (var i = 0; i < fields.length; i++) {
+                        this['_'+fields[i]] = user[fields[i]]
+                    }
                 } else {
-                    this._message = "log in";
-                    this._link_url = this.loginUrl;
+                    document.getElementById('authenticated').close();
+                    document.getElementById('anonymous').open();
                 }
             }
         });

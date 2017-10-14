@@ -6,7 +6,6 @@ ldap3>=1.4.0
 tqdm>=4.8.4
 flake8>=3.0.4
 djangorestframework>=3.5.3
-mysqlclient>=1.3.9
 
 # For student image import / manipulation
 requests>=2.11.1
@@ -20,3 +19,8 @@ pre-js-py==1.1.0
 
 # For testing pep
 pep8 >= 1.7.0
+
+# mysqlclient>=1.3.9
+
+# email link login shit. If anyone reads this, I hope you get paid for this shit
+django-sesame==1.2
