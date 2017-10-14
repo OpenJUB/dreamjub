@@ -1,4 +1,5 @@
-from rest_framework import serializers, views, viewsets, filters, decorators
+from rest_framework import serializers, views, viewsets, filters, decorators, \
+    permissions
 from django_filters.rest_framework import DjangoFilterBackend
 from django import shortcuts
 from django import conf
@@ -6,6 +7,12 @@ from django import http
 
 from dreamjub import models as core_models
 from api.filters import extended as extended_filters
+
+
+class UserOrOAuthApplication(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return (request.user and request.user.is_authenticated) or \
+               (request.auth and request.auth.application)
 
 
 class StudentSerializer(serializers.ModelSerializer):
@@ -29,6 +36,7 @@ class CourseSerializer(serializers.ModelSerializer):
 class StudentViewSet(viewsets.ReadOnlyModelViewSet):
     # Permissions
     required_scopes = []
+    permission_classes = [UserOrOAuthApplication]
 
     # Content
     queryset = core_models.Student.objects.all()
@@ -67,6 +75,7 @@ class StudentViewSet(viewsets.ReadOnlyModelViewSet):
 class CourseView(viewsets.ReadOnlyModelViewSet):
     # Permissions
     required_scopes = []
+    permission_classes = [UserOrOAuthApplication]
 
     # Content
     queryset = core_models.Course.objects.all()
