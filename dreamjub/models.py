@@ -31,8 +31,9 @@ class Student(models.Model):
         return '%s %s' % (self.firstName, self.lastName)
 
     # Colorfoul Info
-    country = models.TextField(null=True)  #: Country of origin
-    picture = models.ImageField(null=True, upload_to='faces/%Y/%m/%d/')  #:
+    country = models.TextField(blank=True, null=True)  #: Country of origin
+    picture = models.ImageField(blank=True, null=True,
+                                upload_to='faces/%Y/%m/%d/')  #:
     # Picture (if available)
 
     # College Contact Info
@@ -45,13 +46,13 @@ class Student(models.Model):
         (MERCATOR, 'Mercator College'),
         (COLLEGE_III, 'College III'),
         (COLLEGE_NORDMETALL, 'College Nordmetall')
-    ), null=True, max_length=255)
+    ), blank=True, null=True, max_length=255)
 
     # Physical contact information
     phone = models.TextField(blank=True, null=True)
     isCampusPhone = models.BooleanField(default=False)
     room = models.TextField(blank=True, null=True)
-    building = models.CharField(null=True, max_length=255)
+    building = models.CharField(blank=True, null=True, max_length=255)
 
     # Types of people
     isStudent = models.BooleanField()
@@ -78,7 +79,7 @@ class Student(models.Model):
 
         (WINTER, 'Winter School Student'),
         (GUEST, 'Guest Student')
-    ), null=True, max_length=255)  #: current student status
+    ), blank=True, null=True, max_length=255)  #: current student status
 
     #: Degree Status
     BACHELOR_OF_SCIENCE = 'Bachelor of Science'
@@ -94,12 +95,12 @@ class Student(models.Model):
         (MASTER_OF_ART, 'Master of Art'),
 
         (PHD_DEGREE, 'PhD')
-    ), null=True, max_length=255)
+    ), blank=True, null=True, max_length=255)
 
     # year and major
     year = models.PositiveIntegerField(
-        null=True)  #: (Last known) year of Graduation
-    majorShort = models.CharField(null=True, max_length=255)
+        blank=True, null=True)  #: (Last known) year of Graduation
+    majorShort = models.CharField(blank=True, null=True, max_length=255)
 
     # TODO: Fill this
     MAJOR_NAMES_MAP = {
