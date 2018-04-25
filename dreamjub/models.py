@@ -10,7 +10,6 @@ class Student(models.Model):
     # ================
     # STUDENT / USERS PROPERTIES
     # ================
-    # Please also look at LocalStudent model to make these overwritable.
 
     # CORE
     eid = models.IntegerField(unique=True)  #: Employee ID
@@ -115,27 +114,6 @@ class Student(models.Model):
         else:
             return None
 
-    def localise(self, save=True):
-        """ Localises this student by merging with a local object.
-
-        :param save: If set to False, will not auto-save the given object.
-        :type save: bool
-        """
-
-        # try to get the LocalStudent
-        try:
-            local = LocalStudent.objects.get(eid=self.eid)
-        except LocalStudent.DoesNotExist:
-            return False
-
-        # do the update
-        local.merge_with(self)
-        if save:
-            self.save()
-
-        # we did it -- nice
-        return True
-
     @classmethod
     def from_json(cls, data):
         """ Creates a new Student from JSON received from LDAP. """
@@ -218,7 +196,7 @@ class Student(models.Model):
     @classmethod
     def refresh_from_ldap(cls, username: str = None, password: str = None,
                           studs: typing.List[dict] = None) -> bool:
-        """ Refreshes all users from ldap and the LocalStudent db.
+        """ Refreshes all users from ldap.
         either username and password or studs should be given explicitly.
         """
 
@@ -249,7 +227,6 @@ class Student(models.Model):
             eid = s.pop("eid")
 
             (stud, sup) = cls.objects.update_or_create(eid=eid, defaults=s)
-            stud.localise()
 
         # and we are done
         return True
@@ -314,28 +291,6 @@ class Student(models.Model):
             user.save()
 
         return user
-
-
-class LocalStudent(models.Model):
-    # ================
-    # STUDENT / USERS PROPERTIES
-    # ================
-    # these are the local versions which can be overwritten.
-
-    eid = models.IntegerField(unique=True)
-
-    def merge_with(self, student):
-        """ Merges this LocalStudent instance into a student instance. """
-
-        # Iterate over all the fields
-        for field in self._meta.fields:
-
-            # read the value
-            value = getattr(self, field.name)
-
-            # and if it is not None, overwrite
-            if value is not None:
-                setattr(student, field.name, value)
 
 
 # ENABLE SEARCHING
@@ -428,5 +383,4 @@ class AdminCourse(admin.ModelAdmin):
 
 
 admin.site.register(Student, AdminStudent)
-admin.site.register(LocalStudent, AdminStudent)
 admin.site.register(Course, AdminCourse)
